@@ -1,0 +1,44 @@
+{
+  "name": "@weddingplanner/frontend-shared",
+  "version": "1.0.0",
+  "description": "Shared React hooks, API utilities, and state management",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./api": {
+      "types": "./dist/api/index.d.ts",
+      "default": "./dist/api/index.js"
+    },
+    "./hooks": {
+      "types": "./dist/hooks/index.d.ts",
+      "default": "./dist/hooks/index.js"
+    }
+  },
+  "dependencies": {
+    "@weddingplanner/types": "file:../types"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.0.0",
+    "react": ">=18.0.0",
+    "zustand": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@8.15.0"
+}

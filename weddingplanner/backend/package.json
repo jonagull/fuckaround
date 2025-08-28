@@ -1,0 +1,30 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "engines": {
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm",
+    "pnpm": ">=8"
+  },
+  "packageManager": "pnpm@10.9.0",
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "dev": "nodemon index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^5.1.0",
+    "@weddingplanner/types": "file:../packages/types"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.3.0",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  }
+}
