@@ -11,7 +11,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Heart, Calendar, MapPin, Users, Palette } from "lucide-react";
+import { Heart, Calendar, MapPin, Users, Palette, Check } from "lucide-react";
+import { markStepCompleted } from "../utils/progress";
 
 interface OnboardingStepProps {
     data: WeddingData;
@@ -260,7 +261,15 @@ export function OnboardingStep({
                 </div>
             </CardContent>
 
-            <CardFooter className="flex flex-col sm:flex-row justify-end gap-3 pt-6 px-4 lg:px-6">
+            <CardFooter className="flex flex-col sm:flex-row justify-between gap-3 pt-6 px-4 lg:px-6">
+                <Button
+                    variant="outline"
+                    onClick={() => markStepCompleted(1)}
+                    className="w-full sm:w-auto"
+                >
+                    <Check className="w-4 h-4 mr-2" />
+                    Mark Complete
+                </Button>
                 <Button
                     onClick={validateAndNext}
                     size="lg"
