@@ -14,12 +14,27 @@ export default function Home() {
                     </span>
                 </div>
                 <div className="flex items-center space-x-4">
+                    <a
+                        href="/wedding-wizard"
+                        className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
+                    >
+                        Wedding Planner
+                    </a>
+                    <a
+                        href="/table-planning"
+                        className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
+                    >
+                        Table Planning
+                    </a>
                     <button className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors">
                         Login
                     </button>
-                    <button className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-full hover:from-rose-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl">
+                    <a
+                        href="/wedding-wizard"
+                        className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-full hover:from-rose-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+                    >
                         Get Started
-                    </button>
+                    </a>
                 </div>
             </nav>
 
@@ -41,9 +56,12 @@ export default function Home() {
                         beautiful place.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                        <button className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-8 py-4 rounded-full text-lg font-semibold hover:from-rose-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
+                        <a
+                            href="/wedding-wizard"
+                            className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-8 py-4 rounded-full text-lg font-semibold hover:from-rose-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                        >
                             Start Planning Now
-                        </button>
+                        </a>
                         <button className="border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200">
                             Watch Demo
                         </button>
@@ -154,9 +172,12 @@ export default function Home() {
                         Join thousands of couples who have planned their perfect
                         day with us
                     </p>
-                    <button className="bg-white text-rose-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
+                    <a
+                        href="/wedding-wizard"
+                        className="bg-white text-rose-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                    >
                         Create Your Wedding
-                    </button>
+                    </a>
                 </div>
             </section>
 
