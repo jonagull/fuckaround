@@ -14,6 +14,12 @@ export default function Home() {
                     </span>
                 </div>
                 <div className="flex items-center space-x-4">
+                    <a
+                        href="/table-planning"
+                        className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
+                    >
+                        Table Planning
+                    </a>
                     <button className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors">
                         Login
                     </button>
