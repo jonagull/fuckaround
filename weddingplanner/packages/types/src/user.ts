@@ -6,3 +6,11 @@ export interface User extends BaseEntity {
     email: string;
     phoneNumber: string;
 }
+
+
+/**
+ * Params for the get user route api/users/:id
+ */
+export interface GetUserParams {
+    id: string;
+}
