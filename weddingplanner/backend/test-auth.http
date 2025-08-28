@@ -1,0 +1,44 @@
+### Register a new user
+POST http://localhost:3070/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123",
+  "name": "John Doe",
+  "phone": "+1234567890"
+}
+
+### Login via web (sets httpOnly cookies)
+POST http://localhost:3070/api/auth/login/web
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+### Login via mobile (returns tokens)
+POST http://localhost:3070/api/auth/login/mobile
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+### Refresh token (mobile)
+POST http://localhost:3070/api/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "YOUR_REFRESH_TOKEN_HERE"
+}
+
+### Logout
+POST http://localhost:3070/api/auth/logout
+
+
+
+### Get user by id
+GET http://localhost:3070/api/users/24d49f49-96aa-408b-8f5d-ccd7aedca811

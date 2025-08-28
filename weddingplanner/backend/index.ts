@@ -1,12 +1,18 @@
 import express from 'express'
-import userRoutes from './routes/user'
+import cookieParser from 'cookie-parser'
+import usersRoutes from './routes/users'
+import authRoutes from './routes/auth'
+import { errorHandler } from './middleware/errorHandler'
 
 const app = express()
 const PORT = 3070
 
-// user routes
-app.use('/api/user', userRoutes)
+app.use(express.json())
+app.use(cookieParser())
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`)
-})
+app.use('/api/auth', authRoutes) // auth routes
+app.use('/api/users', usersRoutes) // users routes
+
+app.use(errorHandler)
+
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`))

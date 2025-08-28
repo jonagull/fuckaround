@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: wedding_planner_db
+    environment:
+      POSTGRES_USER: wedding_user
+      POSTGRES_PASSWORD: wedding_pass
+      POSTGRES_DB: wedding_planner
+    ports:
+      - "5677:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
