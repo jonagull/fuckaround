@@ -4,7 +4,9 @@ Content-Type: application/json
 
 {
   "email": "test@example.com",
-  "password": "password123"
+  "password": "password123",
+  "name": "John Doe",
+  "phone": "+1234567890"
 }
 
 ### Login via web (sets httpOnly cookies)
