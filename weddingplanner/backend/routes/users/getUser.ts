@@ -1,7 +1,7 @@
+import { EmptyBody, GetUserParams, User } from '@weddingplanner/types';
 import { prisma } from '../../lib/prisma';
 import { asyncHandler } from '../../lib/types';
 import { notFound } from '../../lib/ApiError';
-import { EmptyBody, GetUserParams, User } from '@weddingplanner/types';
 
 export const getUserFunction = asyncHandler<EmptyBody, User, GetUserParams>(200, async (req) => {
     const { id } = req.params;

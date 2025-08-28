@@ -4,6 +4,7 @@ import { asyncHandler, apiSuccess } from '../../lib/types';
 import { ApiError } from '../../lib/ApiError';
 import { RegisterRequest, UserResponse } from '@weddingplanner/types';
 
+
 export const registerFunction = asyncHandler<RegisterRequest, UserResponse>(201, async (req) => {
   const { email, password, name } = req.body;
 

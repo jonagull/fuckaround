@@ -11,7 +11,10 @@ app.use(express.json())
 app.use(cookieParser())
 
 app.use('/api/auth', authRoutes) // auth routes
-app.use('/api/users', usersRoutes) // users routes
+app.use('/api/users', usersRoutes) // users route
+
+
+// app.use(/api/invitations', invitationRoites) // invitation rotues.
 
 app.use(errorHandler)
 

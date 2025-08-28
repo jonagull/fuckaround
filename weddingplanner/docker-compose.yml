@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: wedding_planner_db
+    environment:
+      POSTGRES_USER: wedding_user
+      POSTGRES_PASSWORD: wedding_pass
+      POSTGRES_DB: wedding_planner
+    ports:
+      - "5677:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wedding_user -d wedding_planner"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: wedding_planner_backend
+    environment:
+      DATABASE_URL: "postgresql://wedding_user:wedding_pass@postgres:5432/wedding_planner?schema=public"
+      JWT_SECRET: "your-secret-key-change-in-production"
+      JWT_REFRESH_SECRET: "your-refresh-secret-change-in-production"
+    ports:
+      - "3070:3070"
+      - "5555:5555"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app/backend
+      - ./packages:/app/packages
+      - /app/backend/node_modules
+    command: sh -c "pnpm prisma migrate dev --name init && pnpm dev"
+
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+    container_name: wedding_planner_web
+    environment:
+      NEXT_PUBLIC_API_URL: "http://localhost:3070/api"
+    ports:
+      - "3050:3050"
+    depends_on:
+      - backend
+    volumes:
+      - ./web:/app/web
+      - ./packages:/app/packages
+      - /app/web/node_modules
+      - /app/web/.next
+    command: pnpm dev
+
+volumes:
+  postgres_data:
