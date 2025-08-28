@@ -64,22 +64,22 @@ export function OnboardingStep({
     ];
 
     return (
-        <div className="max-w-4xl mx-auto p-6">
-            <CardHeader className="text-center pb-8">
-                <div className="mx-auto w-16 h-16 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center mb-4 shadow-lg">
-                    <Heart className="w-8 h-8 text-white" />
+        <Card className="shadow-sm">
+            <CardHeader className="text-center pb-6 lg:pb-8">
+                <div className="mx-auto w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center mb-4 shadow-lg">
+                    <Heart className="w-6 h-6 lg:w-8 lg:h-8 text-white" />
                 </div>
-                <CardTitle className="text-3xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent mb-2">
+                <CardTitle className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent mb-2">
                     Welcome to Your Wedding Journey!
                 </CardTitle>
-                <CardDescription className="text-lg">
+                <CardDescription className="text-base lg:text-lg">
                     Let's start by gathering some basic information about your
                     special day
                 </CardDescription>
             </CardHeader>
 
-            <CardContent>
-                <div className="grid md:grid-cols-2 gap-6">
+            <CardContent className="px-4 lg:px-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
                     {/* Partner Names */}
                     <div className="space-y-2">
                         <Label
@@ -260,15 +260,15 @@ export function OnboardingStep({
                 </div>
             </CardContent>
 
-            <CardFooter className="flex justify-end pt-6">
+            <CardFooter className="flex flex-col sm:flex-row justify-end gap-3 pt-6 px-4 lg:px-6">
                 <Button
                     onClick={validateAndNext}
                     size="lg"
-                    className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 shadow-lg hover:shadow-xl transition-all duration-200"
+                    className="w-full sm:w-auto bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 shadow-lg hover:shadow-xl transition-all duration-200"
                 >
                     Continue to Guest List
                 </Button>
             </CardFooter>
-        </div>
+        </Card>
     );
 }

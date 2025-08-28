@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { StepIndicator } from "./components/StepIndicator";
+import { Sidebar } from "./components/Sidebar";
 import { OnboardingStep } from "./steps/OnboardingStep";
 import { GuestListStep } from "./steps/GuestListStep";
 import { InvitationStep } from "./steps/InvitationStep";
@@ -9,6 +9,9 @@ import { RSVPManagementStep } from "./steps/RSVPManagementStep";
 import { TablePlanningStep } from "./steps/TablePlanningStep";
 import { OverviewStep } from "./steps/OverviewStep";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Menu, X } from "lucide-react";
 
 export interface WeddingData {
     // Onboarding data
@@ -75,6 +78,7 @@ const STEPS = [
 
 export default function WeddingWizardPage() {
     const [currentStep, setCurrentStep] = useState(1);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const [weddingData, setWeddingData] = useState<WeddingData>({
         weddingDate: "",
         partnerOneName: "",
@@ -177,29 +181,69 @@ export default function WeddingWizardPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-rose-50/50 via-white to-pink-50/50">
-            {/* Header */}
-            <div className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-                <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="flex h-screen bg-gray-50 relative">
+            {/* Mobile Sidebar Overlay */}
+            {sidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+                    onClick={() => setSidebarOpen(false)}
+                />
+            )}
+
+            {/* Sidebar */}
+            <div
+                className={`
+                fixed lg:static inset-y-0 left-0 z-50 w-80 transform transition-transform duration-300 ease-in-out lg:translate-x-0
+                ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+            `}
+            >
+                <Sidebar
+                    currentStep={currentStep}
+                    steps={STEPS}
+                    onStepClick={goToStep}
+                    weddingData={weddingData}
+                    onClose={() => setSidebarOpen(false)}
+                />
+            </div>
+
+            {/* Main Content */}
+            <div className="flex-1 flex flex-col overflow-hidden lg:ml-0">
+                {/* Header */}
+                <div className="bg-white border-b border-gray-200 px-4 lg:px-6 py-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
-                                <span className="text-white font-bold">W</span>
-                            </div>
-                            <div>
-                                <h1 className="text-xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
-                                    Wedding Planner
+                            {/* Mobile Menu Button */}
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="lg:hidden"
+                                onClick={() => setSidebarOpen(true)}
+                            >
+                                <Menu className="w-5 h-5" />
+                            </Button>
+                            <div className="min-w-0">
+                                <h1 className="text-xl lg:text-2xl font-bold text-gray-900 truncate">
+                                    {
+                                        STEPS.find((s) => s.id === currentStep)
+                                            ?.title
+                                    }
                                 </h1>
-                                <p className="text-xs text-gray-500">
-                                    Plan your perfect day
+                                <p className="text-gray-600 mt-1 text-sm lg:text-base hidden sm:block">
+                                    {
+                                        STEPS.find((s) => s.id === currentStep)
+                                            ?.description
+                                    }
                                 </p>
                             </div>
                         </div>
-                        <div className="flex items-center space-x-4">
-                            <div className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
-                                Step {currentStep} of {STEPS.length}
-                            </div>
-                            <div className="w-24 bg-gray-200 rounded-full h-2">
+                        <div className="flex items-center space-x-2 lg:space-x-3">
+                            <Badge
+                                variant="secondary"
+                                className="px-2 lg:px-3 py-1 text-xs lg:text-sm"
+                            >
+                                {currentStep}/{STEPS.length}
+                            </Badge>
+                            <div className="w-16 lg:w-32 bg-gray-200 rounded-full h-2">
                                 <div
                                     className="bg-gradient-to-r from-rose-500 to-pink-500 h-2 rounded-full transition-all duration-300"
                                     style={{
@@ -212,22 +256,13 @@ export default function WeddingWizardPage() {
                         </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Step Indicator */}
-            <div className="max-w-7xl mx-auto px-6 py-8">
-                <StepIndicator
-                    steps={STEPS}
-                    currentStep={currentStep}
-                    onStepClick={goToStep}
-                />
-            </div>
-
-            {/* Step Content */}
-            <div className="max-w-7xl mx-auto px-6 pb-12">
-                <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
-                    {renderCurrentStep()}
-                </Card>
+                {/* Content Area */}
+                <div className="flex-1 overflow-auto p-4 lg:p-6">
+                    <div className="max-w-5xl mx-auto">
+                        {renderCurrentStep()}
+                    </div>
+                </div>
             </div>
         </div>
     );
