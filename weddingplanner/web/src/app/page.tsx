@@ -1,103 +1,183 @@
 import Image from "next/image";
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+            {/* Navigation */}
+            <nav className="flex items-center justify-between p-6 max-w-7xl mx-auto">
+                <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
+                        <span className="text-white font-bold text-sm">W</span>
+                    </div>
+                    <span className="text-xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
+                        WeddingPlanner
+                    </span>
+                </div>
+                <div className="flex items-center space-x-4">
+                    <button className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors">
+                        Login
+                    </button>
+                    <button className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-full hover:from-rose-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl">
+                        Get Started
+                    </button>
+                </div>
+            </nav>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            {/* Hero Section */}
+            <section className="max-w-7xl mx-auto px-6 py-20 text-center">
+                <div className="max-w-4xl mx-auto">
+                    <h1 className="text-5xl md:text-7xl font-bold mb-6">
+                        <span className="bg-gradient-to-r from-rose-600 via-pink-600 to-purple-600 bg-clip-text text-transparent">
+                            Plan Your Perfect
+                        </span>
+                        <br />
+                        <span className="text-gray-900 dark:text-white">
+                            Wedding Day
+                        </span>
+                    </h1>
+                    <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+                        Create your dream wedding with our easy-to-use platform.
+                        Register, invite guests, and manage RSVPs all in one
+                        beautiful place.
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                        <button className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-8 py-4 rounded-full text-lg font-semibold hover:from-rose-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
+                            Start Planning Now
+                        </button>
+                        <button className="border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200">
+                            Watch Demo
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            {/* Features Section */}
+            <section className="max-w-7xl mx-auto px-6 py-20">
+                <div className="text-center mb-16">
+                    <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                        Everything You Need for Your Special Day
+                    </h2>
+                    <p className="text-xl text-gray-600 dark:text-gray-300">
+                        From guest management to RSVP tracking, we've got you
+                        covered
+                    </p>
+                </div>
+
+                <div className="grid md:grid-cols-3 gap-8">
+                    <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-100 dark:border-gray-700">
+                        <div className="w-12 h-12 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center mb-6">
+                            <svg
+                                className="w-6 h-6 text-white"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                />
+                            </svg>
+                        </div>
+                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                            Easy Registration
+                        </h3>
+                        <p className="text-gray-600 dark:text-gray-300">
+                            Create your wedding profile in minutes. Add your
+                            details, photos, and start planning your perfect
+                            day.
+                        </p>
+                    </div>
+
+                    <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-100 dark:border-gray-700">
+                        <div className="w-12 h-12 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center mb-6">
+                            <svg
+                                className="w-6 h-6 text-white"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                                />
+                            </svg>
+                        </div>
+                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                            Smart Invitations
+                        </h3>
+                        <p className="text-gray-600 dark:text-gray-300">
+                            Send beautiful digital invitations to your guests.
+                            Track who's coming and manage your guest list
+                            effortlessly.
+                        </p>
+                    </div>
+
+                    <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-100 dark:border-gray-700">
+                        <div className="w-12 h-12 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center mb-6">
+                            <svg
+                                className="w-6 h-6 text-white"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                                />
+                            </svg>
+                        </div>
+                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                            RSVP Management
+                        </h3>
+                        <p className="text-gray-600 dark:text-gray-300">
+                            Real-time RSVP tracking with automatic
+                            notifications. Know exactly who's attending your
+                            special day.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            {/* CTA Section */}
+            <section className="max-w-7xl mx-auto px-6 py-20">
+                <div className="bg-gradient-to-r from-rose-500 to-pink-500 rounded-3xl p-12 text-center text-white">
+                    <h2 className="text-4xl font-bold mb-4">
+                        Ready to Start Your Wedding Journey?
+                    </h2>
+                    <p className="text-xl mb-8 opacity-90">
+                        Join thousands of couples who have planned their perfect
+                        day with us
+                    </p>
+                    <button className="bg-white text-rose-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
+                        Create Your Wedding
+                    </button>
+                </div>
+            </section>
+
+            {/* Footer */}
+            <footer className="border-t border-gray-200 dark:border-gray-700 py-12">
+                <div className="max-w-7xl mx-auto px-6 text-center">
+                    <div className="flex items-center justify-center space-x-2 mb-4">
+                        <div className="w-6 h-6 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
+                            <span className="text-white font-bold text-xs">
+                                W
+                            </span>
+                        </div>
+                        <span className="text-lg font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
+                            WeddingPlanner
+                        </span>
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-300">
+                        © 2024 WeddingPlanner. Making your special day perfect.
+                    </p>
+                </div>
+            </footer>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    );
 }
