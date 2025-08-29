@@ -227,8 +227,8 @@ export default function Sidebar({
                             step.status === "current"
                                 ? "bg-gradient-to-r from-rose-50 to-pink-50 border border-rose-200 shadow-sm"
                                 : step.status === "completed"
-                                ? "bg-emerald-50 border border-emerald-200 hover:bg-emerald-100"
-                                : "hover:bg-gray-50 border border-transparent"
+                                ? "bg-rose-50/50 border border-rose-200/50 hover:bg-rose-100/50"
+                                : "hover:bg-slate-50 border border-transparent"
                         }`}
                     >
                         <div
@@ -236,8 +236,8 @@ export default function Sidebar({
                                 step.status === "current"
                                     ? "bg-gradient-to-r from-rose-500 to-pink-500 text-white"
                                     : step.status === "completed"
-                                    ? "bg-emerald-500 text-white"
-                                    : "bg-gray-100 text-gray-400 group-hover:bg-gray-200"
+                                    ? "bg-gradient-to-r from-rose-400 to-pink-400 text-white"
+                                    : "bg-slate-100 text-slate-400 group-hover:bg-slate-200"
                             }`}
                         >
                             {step.status === "completed" ? (
@@ -254,13 +254,13 @@ export default function Sidebar({
                                     step.status === "current"
                                         ? "text-rose-700"
                                         : step.status === "completed"
-                                        ? "text-emerald-700"
-                                        : "text-gray-700"
+                                        ? "text-rose-600"
+                                        : "text-slate-700"
                                 }`}
                             >
                                 {step.title}
                             </p>
-                            <p className="text-xs text-gray-500 truncate">
+                            <p className="text-xs text-slate-500 truncate">
                                 {step.description}
                             </p>
                         </div>
@@ -268,7 +268,7 @@ export default function Sidebar({
                             <ArrowRight className="w-4 h-4 text-rose-500 flex-shrink-0" />
                         )}
                         {step.status === "pending" && (
-                            <Clock className="w-4 h-4 text-gray-300 flex-shrink-0" />
+                            <Clock className="w-4 h-4 text-slate-300 flex-shrink-0" />
                         )}
                     </button>
                 ))}
@@ -357,16 +357,16 @@ export default function Sidebar({
                                 }
                                 onClose?.();
                             }}
-                            className="w-full flex items-center space-x-3 p-2.5 rounded-lg transition-all duration-200 text-left group touch-manipulation hover:bg-blue-50 border border-transparent hover:border-blue-200"
+                            className="w-full flex items-center space-x-3 p-2.5 rounded-lg transition-all duration-200 text-left group touch-manipulation hover:bg-slate-50 border border-transparent hover:border-slate-200"
                         >
-                            <div className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center bg-blue-100 text-blue-600 group-hover:bg-blue-200">
+                            <div className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center bg-slate-100 text-slate-600 group-hover:bg-slate-200">
                                 {tool.icon}
                             </div>
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-gray-700 group-hover:text-blue-700">
+                                <p className="text-sm font-medium text-slate-700 group-hover:text-slate-800">
                                     {tool.title}
                                 </p>
-                                <p className="text-xs text-gray-500 truncate">
+                                <p className="text-xs text-slate-500 truncate">
                                     {tool.description}
                                 </p>
                             </div>

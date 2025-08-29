@@ -265,7 +265,7 @@ export function OnboardingStep({
                 <Button
                     variant="outline"
                     onClick={() => markStepCompleted(1)}
-                    className="w-full sm:w-auto"
+                    className="w-full sm:w-auto border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300"
                 >
                     <Check className="w-4 h-4 mr-2" />
                     Mark Complete
@@ -273,7 +273,7 @@ export function OnboardingStep({
                 <Button
                     onClick={validateAndNext}
                     size="lg"
-                    className="w-full sm:w-auto bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 shadow-lg hover:shadow-xl transition-all duration-200"
+                    className="w-full sm:w-auto bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white shadow-md hover:shadow-lg transition-all duration-200"
                 >
                     Continue to Guest List
                 </Button>

@@ -125,13 +125,13 @@ export function GuestListStep({
                 <div className="flex flex-wrap gap-4 mb-6">
                     <button
                         onClick={() => setShowAddForm(true)}
-                        className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-lg font-semibold hover:from-rose-600 hover:to-pink-600 transition-all duration-200"
+                        className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-lg font-semibold hover:from-rose-600 hover:to-pink-600 shadow-md hover:shadow-lg transition-all duration-200"
                     >
                         Add Guest
                     </button>
                     <button
                         onClick={() => setShowCsvImport(true)}
-                        className="bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-600 transition-all duration-200"
+                        className="bg-slate-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-slate-700 shadow-md hover:shadow-lg transition-all duration-200"
                     >
                         Import CSV
                     </button>
@@ -145,8 +145,8 @@ export function GuestListStep({
                             onClick={() => setFilterGroup(group)}
                             className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                                 filterGroup === group
-                                    ? "bg-rose-500 text-white"
-                                    : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                                    ? "bg-rose-500 text-white shadow-sm"
+                                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                             }`}
                         >
                             {group === "all"
@@ -163,19 +163,19 @@ export function GuestListStep({
                     {filteredGuests.map((guest) => (
                         <div
                             key={guest.id}
-                            className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg flex items-center justify-between"
+                            className="bg-slate-50 p-4 rounded-lg flex items-center justify-between border border-slate-100"
                         >
                             <div className="flex-1">
                                 <div className="flex items-center space-x-4">
                                     <div>
-                                        <h3 className="font-semibold text-gray-900 dark:text-white">
+                                        <h3 className="font-semibold text-slate-900">
                                             {guest.name}
                                         </h3>
-                                        <p className="text-sm text-gray-600 dark:text-gray-300">
+                                        <p className="text-sm text-slate-600">
                                             {guest.email}
                                         </p>
                                         {guest.phone && (
-                                            <p className="text-sm text-gray-600 dark:text-gray-300">
+                                            <p className="text-sm text-slate-600">
                                                 {guest.phone}
                                             </p>
                                         )}
@@ -184,18 +184,18 @@ export function GuestListStep({
                                         <span
                                             className={`px-2 py-1 rounded-full text-xs font-medium ${
                                                 guest.group === "family"
-                                                    ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
+                                                    ? "bg-rose-100 text-rose-700"
                                                     : guest.group === "friends"
-                                                    ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                                                    ? "bg-pink-100 text-pink-700"
                                                     : guest.group === "work"
-                                                    ? "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300"
-                                                    : "bg-gray-100 text-gray-800 dark:bg-gray-600 dark:text-gray-300"
+                                                    ? "bg-slate-200 text-slate-700"
+                                                    : "bg-slate-100 text-slate-600"
                                             }`}
                                         >
                                             {guest.group}
                                         </span>
                                         {guest.allowPlusOne && (
-                                            <span className="px-2 py-1 bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 rounded-full text-xs font-medium">
+                                            <span className="px-2 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">
                                                 +1
                                             </span>
                                         )}
@@ -205,13 +205,13 @@ export function GuestListStep({
                             <div className="flex items-center space-x-2">
                                 <button
                                     onClick={() => setEditingGuest(guest)}
-                                    className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                                    className="text-slate-600 hover:text-slate-800 font-medium"
                                 >
                                     Edit
                                 </button>
                                 <button
                                     onClick={() => deleteGuest(guest.id)}
-                                    className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                                    className="text-rose-600 hover:text-rose-800 font-medium"
                                 >
                                     Delete
                                 </button>
@@ -310,13 +310,13 @@ export function GuestListStep({
                             <div className="flex justify-end space-x-2 mt-6">
                                 <button
                                     onClick={() => setShowAddForm(false)}
-                                    className="px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100"
+                                    className="px-4 py-2 text-slate-600 hover:text-slate-800 font-medium"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={addGuest}
-                                    className="px-4 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-600"
+                                    className="px-4 py-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-lg hover:from-rose-600 hover:to-pink-600 shadow-sm"
                                 >
                                     Add Guest
                                 </button>
@@ -346,13 +346,13 @@ export function GuestListStep({
                             <div className="flex justify-end space-x-2 mt-6">
                                 <button
                                     onClick={() => setShowCsvImport(false)}
-                                    className="px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100"
+                                    className="px-4 py-2 text-slate-600 hover:text-slate-800 font-medium"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={importFromCSV}
-                                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                                    className="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 shadow-sm"
                                 >
                                     Import
                                 </button>
@@ -462,13 +462,13 @@ export function GuestListStep({
                             <div className="flex justify-end space-x-2 mt-6">
                                 <button
                                     onClick={() => setEditingGuest(null)}
-                                    className="px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100"
+                                    className="px-4 py-2 text-slate-600 hover:text-slate-800 font-medium"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={() => updateGuest(editingGuest)}
-                                    className="px-4 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-600"
+                                    className="px-4 py-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-lg hover:from-rose-600 hover:to-pink-600 shadow-sm"
                                 >
                                     Save Changes
                                 </button>
@@ -481,13 +481,13 @@ export function GuestListStep({
                 <div className="flex justify-between mt-8">
                     <button
                         onClick={onPrev}
-                        className="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200"
+                        className="px-6 py-3 border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-all duration-200"
                     >
                         Previous
                     </button>
                     <button
                         onClick={onNext}
-                        className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-8 py-3 rounded-lg font-semibold hover:from-rose-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+                        className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-8 py-3 rounded-lg font-semibold hover:from-rose-600 hover:to-pink-600 transition-all duration-200 shadow-md hover:shadow-lg"
                     >
                         Continue to Invitations
                     </button>
