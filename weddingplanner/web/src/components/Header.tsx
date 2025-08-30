@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -37,6 +38,10 @@ export const Header = () => {
         console.log(me)
     }, [me, setCurrentUser])
 
+    const handleLogoutClick = () => {
+        setCurrentUser(null)
+        router.push('/login')
+    }
 
     const handleGetStartedClick = (e: React.MouseEvent) => {
         e.preventDefault()
