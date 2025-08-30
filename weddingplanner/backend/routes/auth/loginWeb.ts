@@ -1,14 +1,13 @@
 import bcrypt from 'bcrypt';
-import { Response } from 'express';
 import { prisma } from '../../lib/prisma';
 import { generateAccessToken, generateRefreshToken } from '../../lib/jwt';
 import { asyncHandler } from '../../lib/types';
 import { notFound, unauthorized } from '../../lib/ApiError';
-import { LoginRequest, REFRESH_TOKEN_EXPIRY_MS, LoginWebResponse } from 'weddingplanner-types';
-import { generateExpiryDate, requireExists } from '../../lib/utils';
+import { LoginRequest, REFRESH_TOKEN_EXPIRY_MS, UserResponse } from 'weddingplanner-types';
+import { generateExpiryDate } from '../../lib/utils';
 
 
-export const loginWebFunction = asyncHandler<LoginRequest, LoginWebResponse>(200, async (req, res) => {
+export const loginWebFunction = asyncHandler<LoginRequest, UserResponse>(200, async (req, res) => {
   const { email, password } = req.body;
 
   const user = await prisma.user.findUnique({ where: { email } }) ?? notFound('User not found');

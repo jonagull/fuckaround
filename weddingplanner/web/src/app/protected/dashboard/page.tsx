@@ -1,3 +1,8 @@
+"use client";
+import { useCurrentUser } from "@/components/CurrentUserContext";
+
 export default function Dashboard() {
-    return <div>Dashboard</div>;
+    const { currentUser } = useCurrentUser();
+
+    return <div>Dashboard {currentUser?.email}</div>;
 }

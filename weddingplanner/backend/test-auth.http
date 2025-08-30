@@ -42,3 +42,6 @@ POST http://localhost:3070/api/auth/logout
 
 ### Get user by id
 GET http://localhost:3070/api/users/24d49f49-96aa-408b-8f5d-ccd7aedca811
+
+
+GET http://localhost:3070/api/auth/me

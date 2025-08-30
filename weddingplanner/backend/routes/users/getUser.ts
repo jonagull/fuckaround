@@ -1,10 +1,18 @@
 import { EmptyBody, GetUserParams, User } from 'weddingplanner-types';
 import { prisma } from '../../lib/prisma';
-import { asyncHandler } from '../../lib/types';
-import { notFound } from '../../lib/ApiError';
+import { asyncHandler, TypedRequest } from '../../lib/types';
+import { notFound, forbidden } from '../../lib/ApiError';
 
-export const getUserFunction = asyncHandler<EmptyBody, User, GetUserParams>(200, async (req) => {
+type AuthenticatedRequest = TypedRequest<EmptyBody, GetUserParams> & {
+    userId?: string;
+};
+
+export const getUserFunction = asyncHandler<EmptyBody, User, GetUserParams>(200, async (req: AuthenticatedRequest) => {
     const { id } = req.params;
+    const authenticatedUserId = req.userId;
+
+    if (id !== authenticatedUserId) forbidden('You can only access your own user data');
+
 
     const select = {
         id: true,

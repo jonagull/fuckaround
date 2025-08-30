@@ -11,7 +11,7 @@ const PORT = 3070
 // CORS configuration
 const corsOptions = {
     origin: [
-        'http://localhost:3050', // Alternative React port
+        'http://localhost:3050',
     ],
     credentials: true, // Allow cookies and authorization headers
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],

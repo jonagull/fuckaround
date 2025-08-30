@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { authApi } from "../api/authApi";
 import { LoginRequest } from "weddingplanner-types";
 
@@ -12,4 +12,11 @@ export const useLogin = () => {
             queryClient.invalidateQueries({ queryKey: ['auth', 'user'] });
         }
     })
+}
+
+export const useMe = () => {
+    return useQuery({
+        queryKey: ['auth', 'user'],
+        queryFn: authApi.me,
+    });
 }

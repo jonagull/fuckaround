@@ -6,6 +6,9 @@ const types_1 = require("../../lib/types");
 const ApiError_1 = require("../../lib/ApiError");
 exports.getUserFunction = (0, types_1.asyncHandler)(200, async (req) => {
     const { id } = req.params;
+    const authenticatedUserId = req.userId;
+    if (id !== authenticatedUserId)
+        (0, ApiError_1.forbidden)('You can only access your own user data');
     const select = {
         id: true,
         email: true,

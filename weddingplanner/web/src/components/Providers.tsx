@@ -1,7 +1,9 @@
 "use client";
 
+import React from "react";
 import { QueryClient, QueryClientProvider, ReactQueryDevtools } from "weddingplanner-shared";
 import { useState } from "react";
+import { CurrentUserProvider } from "./CurrentUserContext";
 
 export function Providers({ children }: { children: React.ReactNode }) {
 
@@ -18,9 +20,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
     return (
         <QueryClientProvider client={queryClient}>
-            {children}
+            <CurrentUserProvider>
+                {children}
+            </CurrentUserProvider>
             <ReactQueryDevtools initialIsOpen={false} />
-
         </QueryClientProvider>
     );
 }

@@ -3,12 +3,17 @@ import Link from "next/link"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Skeleton } from "./ui/skeleton"
+import { useMe } from "weddingplanner-shared"
+import { useCurrentUser } from "./CurrentUserContext"
 
 export const Header = () => {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
+    const { data: me } = useMe()
+
+    const { setCurrentUser } = useCurrentUser()
+
+
     const router = useRouter()
-
-
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -23,17 +28,20 @@ export const Header = () => {
 
         checkAuth()
 
-        const interval = setInterval(checkAuth, 1000)
+        const interval = setInterval(checkAuth, 5 * 60 * 1000)
         return () => clearInterval(interval)
     }, [])
 
+    useEffect(() => {
+        if (me) setCurrentUser(me)
+        console.log(me)
+    }, [me, setCurrentUser])
+
+
     const handleGetStartedClick = (e: React.MouseEvent) => {
         e.preventDefault()
-        if (isAuthenticated) {
-            router.push('/protected/dashboard')
-        } else {
-            router.push('/login')
-        }
+        if (isAuthenticated) router.push('/protected/dashboard')
+        else router.push('/login')
     }
 
     if (isAuthenticated === null) {
