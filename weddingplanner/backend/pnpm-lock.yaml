@@ -33,8 +33,8 @@ importers:
         specifier: ^6.15.0
         version: 6.15.0(typescript@5.9.2)
       weddingplanner-types:
-        specifier: ^1.0.3
-        version: 1.0.3
+        specifier: ^1.0.5
+        version: 1.0.5
     devDependencies:
       '@types/bcrypt':
         specifier: ^6.0.0
@@ -751,8 +751,8 @@ packages:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
 
-  weddingplanner-types@1.0.3:
-    resolution: {integrity: sha512-YnM5x85lVb5hoOwabcxlFyPT6qmET5StcEQ2bHbSyqB5m51t8MowkUTqQmb5XrLjN+XBJIp9eglxWPaXGgTSKw==}
+  weddingplanner-types@1.0.5:
+    resolution: {integrity: sha512-EQQprr5Iu+lzleOBQ3muW9j7dE2kvdqc3SpzM55cWgzz6duezy9Unh5QzvbJeE7fLTIfBOAGDfOEdH7Dde1qDA==}
     engines: {node: '>=18.0.0', pnpm: '>=8.0.0'}
 
   wrappy@1.0.2:
@@ -1493,7 +1493,7 @@ snapshots:
 
   vary@1.1.2: {}
 
-  weddingplanner-types@1.0.3: {}
+  weddingplanner-types@1.0.5: {}
 
   wrappy@1.0.2: {}
 
