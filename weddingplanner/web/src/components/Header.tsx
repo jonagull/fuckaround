@@ -1,40 +1,47 @@
-"use client"
-import Link from "next/link"
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import { Skeleton } from "./ui/skeleton"
+"use client";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Skeleton } from "./ui/skeleton";
 
 export const Header = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
-    const router = useRouter()
-
-
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(
+        null
+    );
+    const router = useRouter();
 
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const response = await fetch('/api/auth/check')
-                const data = await response.json()
-                setIsAuthenticated(data.isAuthenticated)
+                const response = await fetch("/api/auth/check");
+                const data = await response.json();
+                setIsAuthenticated(data.isAuthenticated);
             } catch {
-                setIsAuthenticated(false)
+                setIsAuthenticated(false);
             }
-        }
+        };
 
-        checkAuth()
+        checkAuth();
 
-        const interval = setInterval(checkAuth, 1000)
-        return () => clearInterval(interval)
-    }, [])
+        const interval = setInterval(checkAuth, 1000);
+        return () => clearInterval(interval);
+    }, []);
+
+    const handleLogoutClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+
+        console.log("logout!");
+    };
 
     const handleGetStartedClick = (e: React.MouseEvent) => {
-        e.preventDefault()
+        e.preventDefault();
         if (isAuthenticated) {
-            router.push('/protected/dashboard')
+            // router.push("/protected/dashboard");
+            router.push("/");
         } else {
-            router.push('/login')
+            router.push("/login");
         }
-    }
+    };
 
     if (isAuthenticated === null) {
         return (
@@ -49,7 +56,7 @@ export const Header = () => {
                     <Skeleton className="h-10 w-28 rounded-full" />
                 </div>
             </nav>
-        )
+        );
     }
 
     return (
@@ -65,25 +72,19 @@ export const Header = () => {
                 </div>
             </Link>
             <div className="flex items-center space-x-4">
-                <Link
-                    href="/wedding-wizard"
-                    className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
+                <button
+                    onClick={handleLogoutClick}
+                    className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-full hover:from-rose-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl"
                 >
-                    Wedding Planner
-                </Link>
-                <Link
-                    href="/table-planning"
-                    className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
-                >
-                    Table Planning
-                </Link>
+                    {isAuthenticated ? "Log out" : "Login"}
+                </button>
                 <button
                     onClick={handleGetStartedClick}
                     className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-full hover:from-rose-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl"
                 >
-                    {isAuthenticated ? 'Dashboard' : 'Get Started'}
+                    {isAuthenticated ? "Dashboard" : "Get Started"}
                 </button>
             </div>
         </nav>
-    )
-}
+    );
+};
