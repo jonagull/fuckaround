@@ -1,168 +1,347 @@
+"use client";
+
+import { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
+import {
+    Heart,
+    Plus,
+    Calendar,
+    Users,
+    MapPin,
+    MoreHorizontal,
+    Search,
+    Filter,
+    Settings,
+    ArrowRight,
+} from "lucide-react";
+import Link from "next/link";
+
+const projects = [
+    {
+        id: 1,
+        title: "Sarah & John's Wedding",
+        date: "June 15, 2024",
+        location: "Grand Ballroom, Downtown",
+        guests: 150,
+        progress: 75,
+        status: "Active",
+        statusColor: "bg-green-100 text-green-700",
+        lastUpdated: "2 hours ago",
+    },
+    {
+        id: 2,
+        title: "Emma & Mike's Big Day",
+        date: "August 20, 2024",
+        location: "Beach Resort, Malibu",
+        guests: 80,
+        progress: 45,
+        status: "Planning",
+        statusColor: "bg-blue-100 text-blue-700",
+        lastUpdated: "1 day ago",
+    },
+    {
+        id: 3,
+        title: "Lisa & Tom's Celebration",
+        date: "October 5, 2024",
+        location: "Garden Venue, Napa Valley",
+        guests: 200,
+        progress: 20,
+        status: "Draft",
+        statusColor: "bg-yellow-100 text-yellow-700",
+        lastUpdated: "3 days ago",
+    },
+];
 
 export default function Home() {
+    const [searchTerm, setSearchTerm] = useState("");
+    const [showNewProjectForm, setShowNewProjectForm] = useState(false);
+
+    const filteredProjects = projects.filter((project) =>
+        project.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-            {/* Hero Section */}
-            <section className="max-w-7xl mx-auto px-6 py-20 text-center">
-                <div className="max-w-4xl mx-auto">
-                    <h1 className="text-5xl md:text-7xl font-bold mb-6">
-                        <span className="bg-gradient-to-r from-rose-600 via-pink-600 to-purple-600 bg-clip-text text-transparent">
-                            Plan Your Perfect
-                        </span>
-                        <br />
-                        <span className="text-gray-900 dark:text-white">
-                            Wedding Day
-                        </span>
-                    </h1>
-                    <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
-                        Create your dream wedding with our easy-to-use platform.
-                        Register, invite guests, and manage RSVPs all in one
-                        beautiful place.
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                        <a
-                            href="/wedding-wizard"
-                            className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-8 py-4 rounded-full text-lg font-semibold hover:from-rose-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+            <div className="max-w-7xl mx-auto p-6">
+                {/* Header */}
+                <div className="flex items-center justify-between mb-8">
+                    <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-2">
+                            <div className="w-10 h-10 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
+                                <span className="text-white font-bold text-lg">
+                                    W
+                                </span>
+                            </div>
+                            <div>
+                                <h1 className="text-3xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
+                                    WeddingPlanner
+                                </h1>
+                                <p className="text-gray-600 dark:text-gray-300">
+                                    Manage all your wedding projects
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                        <Button variant="outline">
+                            <Settings className="mr-2 h-4 w-4" />
+                            Settings
+                        </Button>
+                        <Button
+                            onClick={() => setShowNewProjectForm(true)}
+                            className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600"
                         >
-                            Start Planning Now
-                        </a>
-                        <button className="border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200">
-                            Watch Demo
-                        </button>
+                            <Plus className="mr-2 h-4 w-4" />
+                            New Project
+                        </Button>
                     </div>
                 </div>
-            </section>
 
-            {/* Features Section */}
-            <section className="max-w-7xl mx-auto px-6 py-20">
-                <div className="text-center mb-16">
-                    <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                        Everything You Need for Your Special Day
-                    </h2>
-                    <p className="text-xl text-gray-600 dark:text-gray-300">
-                        From guest management to RSVP tracking, we&apos;ve got you
-                        covered
-                    </p>
+                {/* Stats */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <Card className="p-6">
+                        <div className="flex items-center">
+                            <div className="w-12 h-12 bg-rose-100 rounded-lg flex items-center justify-center">
+                                <Heart className="h-6 w-6 text-rose-600" />
+                            </div>
+                            <div className="ml-4">
+                                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
+                                    Active Projects
+                                </p>
+                                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                                    3
+                                </p>
+                            </div>
+                        </div>
+                    </Card>
+
+                    <Card className="p-6">
+                        <div className="flex items-center">
+                            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <Users className="h-6 w-6 text-blue-600" />
+                            </div>
+                            <div className="ml-4">
+                                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
+                                    Total Guests
+                                </p>
+                                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                                    430
+                                </p>
+                            </div>
+                        </div>
+                    </Card>
+
+                    <Card className="p-6">
+                        <div className="flex items-center">
+                            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                                <Calendar className="h-6 w-6 text-green-600" />
+                            </div>
+                            <div className="ml-4">
+                                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
+                                    Upcoming Events
+                                </p>
+                                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                                    5
+                                </p>
+                            </div>
+                        </div>
+                    </Card>
+
+                    <Card className="p-6">
+                        <div className="flex items-center">
+                            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <span className="text-purple-600 font-bold text-lg">
+                                    %
+                                </span>
+                            </div>
+                            <div className="ml-4">
+                                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
+                                    Avg Progress
+                                </p>
+                                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                                    47%
+                                </p>
+                            </div>
+                        </div>
+                    </Card>
                 </div>
 
-                <div className="grid md:grid-cols-3 gap-8">
-                    <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-100 dark:border-gray-700">
-                        <div className="w-12 h-12 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center mb-6">
-                            <svg
-                                className="w-6 h-6 text-white"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                {/* Search and Filters */}
+                <div className="flex items-center space-x-4 mb-6">
+                    <div className="relative flex-1 max-w-sm">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                        <Input
+                            placeholder="Search projects..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="pl-10"
+                        />
+                    </div>
+                    <Button variant="outline">
+                        <Filter className="mr-2 h-4 w-4" />
+                        Filter
+                    </Button>
+                </div>
+
+                {/* New Project Form */}
+                {showNewProjectForm && (
+                    <Card className="p-6 mb-6">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                            Create New Wedding Project
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <Label htmlFor="projectName">
+                                    Couple Names
+                                </Label>
+                                <Input
+                                    id="projectName"
+                                    placeholder="e.g., Sarah & John's Wedding"
+                                    className="mt-1"
                                 />
-                            </svg>
+                            </div>
+                            <div>
+                                <Label htmlFor="weddingDate">
+                                    Wedding Date
+                                </Label>
+                                <Input
+                                    id="weddingDate"
+                                    type="date"
+                                    className="mt-1"
+                                />
+                            </div>
+                            <div>
+                                <Label htmlFor="location">Venue/Location</Label>
+                                <Input
+                                    id="location"
+                                    placeholder="e.g., Grand Ballroom, Downtown"
+                                    className="mt-1"
+                                />
+                            </div>
+                            <div>
+                                <Label htmlFor="estimatedGuests">
+                                    Estimated Guests
+                                </Label>
+                                <Input
+                                    id="estimatedGuests"
+                                    type="number"
+                                    placeholder="150"
+                                    className="mt-1"
+                                />
+                            </div>
                         </div>
-                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                            Easy Registration
+                        <div className="flex items-center space-x-3 mt-6">
+                            <Button className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600">
+                                Create Project
+                            </Button>
+                            <Button
+                                variant="outline"
+                                onClick={() => setShowNewProjectForm(false)}
+                            >
+                                Cancel
+                            </Button>
+                        </div>
+                    </Card>
+                )}
+
+                {/* Projects Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredProjects.map((project) => (
+                        <Card
+                            key={project.id}
+                            className="p-6 hover:shadow-lg transition-all duration-200 group"
+                        >
+                            <div className="flex items-start justify-between mb-4">
+                                <div className="flex items-center space-x-3">
+                                    <div className="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center">
+                                        <Heart className="h-6 w-6 text-rose-600" />
+                                    </div>
+                                    <div>
+                                        <h3 className="font-semibold text-gray-900 dark:text-white">
+                                            {project.title}
+                                        </h3>
+                                        <p className="text-sm text-gray-600 dark:text-gray-300">
+                                            Updated {project.lastUpdated}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <Badge
+                                        variant="secondary"
+                                        className={project.statusColor}
+                                    >
+                                        {project.status}
+                                    </Badge>
+                                    <Button variant="ghost" size="sm">
+                                        <MoreHorizontal className="h-4 w-4" />
+                                    </Button>
+                                </div>
+                            </div>
+
+                            <div className="space-y-3 mb-4">
+                                <div className="flex items-center text-sm text-gray-600 dark:text-gray-300">
+                                    <Calendar className="mr-2 h-4 w-4" />
+                                    {project.date}
+                                </div>
+                                <div className="flex items-center text-sm text-gray-600 dark:text-gray-300">
+                                    <MapPin className="mr-2 h-4 w-4" />
+                                    {project.location}
+                                </div>
+                                <div className="flex items-center text-sm text-gray-600 dark:text-gray-300">
+                                    <Users className="mr-2 h-4 w-4" />
+                                    {project.guests} guests
+                                </div>
+                            </div>
+
+                            <div className="mb-6">
+                                <div className="flex items-center justify-between mb-2">
+                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        Progress
+                                    </span>
+                                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                                        {project.progress}%
+                                    </span>
+                                </div>
+                                <Progress
+                                    value={project.progress}
+                                    className="h-2"
+                                />
+                            </div>
+
+                            <Link
+                                href={`/project/${project.id}`}
+                                className="block"
+                            >
+                                <Button className="w-full bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 group-hover:scale-[1.02] transition-all duration-200">
+                                    Open Project
+                                    <ArrowRight className="ml-2 h-4 w-4" />
+                                </Button>
+                            </Link>
+                        </Card>
+                    ))}
+                </div>
+
+                {/* Empty State */}
+                {filteredProjects.length === 0 && searchTerm && (
+                    <div className="text-center py-12">
+                        <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <Search className="h-8 w-8 text-gray-400" />
+                        </div>
+                        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                            No projects found
                         </h3>
                         <p className="text-gray-600 dark:text-gray-300">
-                            Create your wedding profile in minutes. Add your
-                            details, photos, and start planning your perfect
-                            day.
+                            Try adjusting your search terms or create a new
+                            project.
                         </p>
                     </div>
-
-                    <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-100 dark:border-gray-700">
-                        <div className="w-12 h-12 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center mb-6">
-                            <svg
-                                className="w-6 h-6 text-white"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                                />
-                            </svg>
-                        </div>
-                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                            Smart Invitations
-                        </h3>
-                        <p className="text-gray-600 dark:text-gray-300">
-                            Send beautiful digital invitations to your guests.
-                            Track who&apos;s coming and manage your guest list
-                            effortlessly.
-                        </p>
-                    </div>
-
-                    <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-100 dark:border-gray-700">
-                        <div className="w-12 h-12 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center mb-6">
-                            <svg
-                                className="w-6 h-6 text-white"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                                />
-                            </svg>
-                        </div>
-                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                            RSVP Management
-                        </h3>
-                        <p className="text-gray-600 dark:text-gray-300">
-                            Real-time RSVP tracking with automatic
-                            notifications. Know exactly who&apos;s attending your
-                            special day.
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            {/* CTA Section */}
-            <section className="max-w-7xl mx-auto px-6 py-20">
-                <div className="bg-gradient-to-r from-rose-500 to-pink-500 rounded-3xl p-12 text-center text-white">
-                    <h2 className="text-4xl font-bold mb-4">
-                        Ready to Start Your Wedding Journey?
-                    </h2>
-                    <p className="text-xl mb-8 opacity-90">
-                        Join thousands of couples who have planned their perfect
-                        day with us
-                    </p>
-                    <a
-                        href="/wedding-wizard"
-                        className="bg-white text-rose-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
-                    >
-                        Create Your Wedding
-                    </a>
-                </div>
-            </section>
-
-            {/* Footer */}
-            <footer className="border-t border-gray-200 dark:border-gray-700 py-12">
-                <div className="max-w-7xl mx-auto px-6 text-center">
-                    <div className="flex items-center justify-center space-x-2 mb-4">
-                        <div className="w-6 h-6 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
-                            <span className="text-white font-bold text-xs">
-                                W
-                            </span>
-                        </div>
-                        <span className="text-lg font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
-                            WeddingPlanner
-                        </span>
-                    </div>
-                    <p className="text-gray-600 dark:text-gray-300">
-                        © 2024 WeddingPlanner. Making your special day perfect.
-                    </p>
-                </div>
-            </footer>
+                )}
+            </div>
         </div>
     );
 }
