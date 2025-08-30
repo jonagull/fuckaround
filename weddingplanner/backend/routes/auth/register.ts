@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import { prisma } from '../../lib/prisma';
 import { asyncHandler, apiSuccess } from '../../lib/types';
 import { ApiError } from '../../lib/ApiError';
-import { RegisterRequest, UserResponse } from '@weddingplanner/types';
+import { RegisterRequest, UserResponse } from 'weddingplanner-types';
 
 
 export const registerFunction = asyncHandler<RegisterRequest, UserResponse>(201, async (req) => {

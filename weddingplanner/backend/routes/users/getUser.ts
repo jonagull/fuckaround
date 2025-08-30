@@ -1,4 +1,4 @@
-import { EmptyBody, GetUserParams, User } from '@weddingplanner/types';
+import { EmptyBody, GetUserParams, User } from 'weddingplanner-types';
 import { prisma } from '../../lib/prisma';
 import { asyncHandler } from '../../lib/types';
 import { notFound } from '../../lib/ApiError';

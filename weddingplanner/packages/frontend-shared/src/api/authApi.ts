@@ -1,5 +1,5 @@
 import ApiClient from "./client";
-import { LoginRequest } from "@weddingplanner/types";
+import { LoginRequest } from "weddingplanner-types";
 
 const client = new ApiClient();
 

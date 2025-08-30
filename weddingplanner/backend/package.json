@@ -21,12 +21,12 @@
   "description": "",
   "dependencies": {
     "@prisma/client": "^6.15.0",
-    "@weddingplanner/types": "file:../packages/types",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
-    "prisma": "^6.15.0"
+    "prisma": "^6.15.0",
+    "weddingplanner-types": "^1.0.3"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
