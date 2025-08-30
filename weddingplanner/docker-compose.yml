@@ -18,48 +18,5 @@ services:
       timeout: 5s
       retries: 5
 
-  backend:
-    build:
-      context: .
-      dockerfile: backend/Dockerfile
-    container_name: wedding_planner_backend
-    environment:
-      DATABASE_URL: "postgresql://wedding_user:wedding_pass@postgres:5432/wedding_planner?schema=public"
-      JWT_SECRET: "your-secret-key-change-in-production"
-      JWT_REFRESH_SECRET: "your-refresh-secret-change-in-production"
-    ports:
-      - "3070:3070"
-      - "5555:5555"
-    depends_on:
-      postgres:
-        condition: service_healthy
-    volumes:
-      - ./backend:/app/backend:cached
-      - backend_node_modules:/app/backend/node_modules
-      - pnpm_store:/app/.pnpm-store
-    command: sh -c "pnpm prisma migrate dev --name init && pnpm dev"
-
-  web:
-    build:
-      context: .
-      dockerfile: web/Dockerfile
-    container_name: wedding_planner_web
-    environment:
-      NEXT_PUBLIC_API_URL: "http://localhost:3070/api"
-    ports:
-      - "3050:3050"
-    depends_on:
-      - backend
-    volumes:
-      - ./web:/app/web:cached
-      - web_node_modules:/app/web/node_modules
-      - web_next:/app/web/.next
-      - pnpm_store:/app/.pnpm-store
-    command: pnpm dev
-
 volumes:
   postgres_data:
-  backend_node_modules:
-  web_node_modules:
-  web_next:
-  pnpm_store:
