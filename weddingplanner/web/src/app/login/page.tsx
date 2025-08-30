@@ -116,8 +116,8 @@ export default function Login() {
                                         setPassword(e.target.value)
                                     }
                                     className={`pl-10 pr-10 ${formErrors.password
-                                            ? "border-red-500"
-                                            : ""
+                                        ? "border-red-500"
+                                        : ""
                                         }`}
                                     disabled={isPending}
                                 />
