@@ -4,16 +4,11 @@ import { User } from "./user";
 import { EventRole } from "./enums";
 import { StringRole } from "./common";
 
-
-
 export interface UserEvent extends BaseEntity {
-    eventId: Event['id'];
-    userId: User['id'];
-    role: EventRole;
+  eventId: Event["id"];
+  userId: User["id"];
+  role: EventRole;
 
-
-    stringRole: StringRole;
-    blbl: string;
+  stringRole: StringRole;
+  blbl: string;
 }
-
-

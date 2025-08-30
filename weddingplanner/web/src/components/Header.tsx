@@ -4,97 +4,92 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { Skeleton } from "./ui/skeleton";
-import { useMe, useLogout } from "weddingplanner-shared"
-import { useCurrentUser } from "./CurrentUserContext"
+import { useMe, useLogout } from "weddingplanner-shared";
+import { useCurrentUser } from "./CurrentUserContext";
 
 export const Header = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
-    const { mutate: logout } = useLogout()
-    const { data: me } = useMe()
-    const { setCurrentUser } = useCurrentUser()
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const { mutate: logout } = useLogout();
+  const { data: me } = useMe();
+  const { setCurrentUser } = useCurrentUser();
 
-    const router = useRouter()
-    const pathname = usePathname()
+  const router = useRouter();
+  const pathname = usePathname();
 
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch("/api/auth/check");
+        const data = await response.json();
+        setIsAuthenticated(data.isAuthenticated);
+      } catch {
+        setIsAuthenticated(false);
+      }
+    };
 
+    checkAuth();
 
+    const interval = setInterval(checkAuth, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [pathname]);
 
+  useEffect(() => {
+    if (me) setCurrentUser(me);
+  }, [me, setCurrentUser]);
 
-    useEffect(() => {
-        const checkAuth = async () => {
-            try {
-                const response = await fetch("/api/auth/check");
-                const data = await response.json();
-                setIsAuthenticated(data.isAuthenticated);
-            } catch {
-                setIsAuthenticated(false);
-            }
-        };
+  const handleLogoutClick = () => {
+    logout();
+    router.push("/login");
+  };
 
-        checkAuth();
+  const handleGetStartedClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (isAuthenticated) router.push("/protected/dashboard");
+    else router.push("/login");
+  };
 
-        const interval = setInterval(checkAuth, 5 * 60 * 1000)
-        return () => clearInterval(interval)
-    }, [pathname])
-
-    useEffect(() => {
-        if (me) setCurrentUser(me)
-    }, [me, setCurrentUser])
-
-
-    const handleLogoutClick = () => {
-        logout()
-        router.push('/login')
-    }
-
-    const handleGetStartedClick = (e: React.MouseEvent) => {
-        e.preventDefault()
-        if (isAuthenticated) router.push('/protected/dashboard')
-        else router.push('/login')
-    }
-
-    if (isAuthenticated === null) {
-        return (
-            <nav className="flex items-center justify-between p-6 max-w-7xl mx-auto">
-                <div className="flex items-center space-x-2">
-                    <Skeleton className="w-8 h-8 rounded-full" />
-                    <Skeleton className="h-6 w-32" />
-                </div>
-                <div className="flex items-center space-x-4">
-                    <Skeleton className="h-5 w-24" />
-                    <Skeleton className="h-5 w-24" />
-                    <Skeleton className="h-10 w-28 rounded-full" />
-                </div>
-            </nav>
-        );
-    }
-
+  if (isAuthenticated === null) {
     return (
-        <nav className="flex items-center justify-between p-6 max-w-7xl mx-auto">
-            <Link href="/">
-                <div className="flex items-center space-x-2">
-                    <div className="w-8 h-8 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
-                        <span className="text-white font-bold text-sm">W</span>
-                    </div>
-                    <span className="text-xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
-                        WeddingPlanner
-                    </span>
-                </div>
-            </Link>
-            <div className="flex items-center space-x-4">
-                <button
-                    onClick={handleLogoutClick}
-                    className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-full hover:from-rose-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl"
-                >
-                    {isAuthenticated ? "Log out" : "Login"}
-                </button>
-                <button
-                    onClick={handleGetStartedClick}
-                    className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-full hover:from-rose-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl"
-                >
-                    {isAuthenticated ? "Dashboard" : "Get Started"}
-                </button>
-            </div>
-        </nav>
+      <nav className="flex items-center justify-between p-6 max-w-7xl mx-auto">
+        <div className="flex items-center space-x-2">
+          <Skeleton className="w-8 h-8 rounded-full" />
+          <Skeleton className="h-6 w-32" />
+        </div>
+        <div className="flex items-center space-x-4">
+          <Skeleton className="h-5 w-24" />
+          <Skeleton className="h-5 w-24" />
+          <Skeleton className="h-10 w-28 rounded-full" />
+        </div>
+      </nav>
     );
+  }
+
+  return (
+    <nav className="flex items-center justify-between p-6 max-w-7xl mx-auto">
+      <Link href="/">
+        <div className="flex items-center space-x-2">
+          <div className="w-8 h-8 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
+            <span className="text-white font-bold text-sm">W</span>
+          </div>
+          <span className="text-xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
+            WeddingPlanner
+          </span>
+        </div>
+      </Link>
+      <div className="flex items-center space-x-4">
+        <button
+          onClick={handleLogoutClick}
+          className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-full hover:from-rose-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+        >
+          {isAuthenticated ? "Log out" : "Login"}
+        </button>
+        <button
+          onClick={handleGetStartedClick}
+          className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-full hover:from-rose-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+        >
+          {isAuthenticated ? "Dashboard" : "Get Started"}
+        </button>
+      </div>
+    </nav>
+  );
 };

@@ -7,3 +7,4 @@ export * from "./event";
 export * from "./invitation";
 export * from "./user";
 export * from "./userEvent";
+export * from "./requests";

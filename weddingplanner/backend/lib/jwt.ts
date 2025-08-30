@@ -1,7 +1,7 @@
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'your-refresh-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
+const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || "your-refresh-secret-key";
 
 /**
  * Generates a short-lived access token for user authentication
@@ -12,7 +12,8 @@ const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'your-refresh-secre
  * const accessToken = generateAccessToken('user123');
  * ```
  */
-export const generateAccessToken = (userId: string) => jwt.sign({ userId }, JWT_SECRET, { expiresIn: '15m' });
+export const generateAccessToken = (userId: string) =>
+  jwt.sign({ userId }, JWT_SECRET, { expiresIn: "15m" });
 
 /**
  * Generates a long-lived refresh token for obtaining new access tokens
@@ -23,7 +24,8 @@ export const generateAccessToken = (userId: string) => jwt.sign({ userId }, JWT_
  * const refreshToken = generateRefreshToken('user123');
  * ```
  */
-export const generateRefreshToken = (userId: string) => jwt.sign({ userId }, JWT_REFRESH_SECRET, { expiresIn: '7d' });
+export const generateRefreshToken = (userId: string) =>
+  jwt.sign({ userId }, JWT_REFRESH_SECRET, { expiresIn: "7d" });
 
 /**
  * Verifies and decodes an access token
@@ -41,7 +43,8 @@ export const generateRefreshToken = (userId: string) => jwt.sign({ userId }, JWT
  * }
  * ```
  */
-export const verifyAccessToken = (token: string) => jwt.verify(token, JWT_SECRET) as { userId: string };
+export const verifyAccessToken = (token: string) =>
+  jwt.verify(token, JWT_SECRET) as { userId: string };
 
 /**
  * Verifies and decodes a refresh token
@@ -59,4 +62,5 @@ export const verifyAccessToken = (token: string) => jwt.verify(token, JWT_SECRET
  * }
  * ```
  */
-export const verifyRefreshToken = (token: string) => jwt.verify(token, JWT_REFRESH_SECRET) as { userId: string };
+export const verifyRefreshToken = (token: string) =>
+  jwt.verify(token, JWT_REFRESH_SECRET) as { userId: string };

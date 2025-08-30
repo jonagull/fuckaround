@@ -14,7 +14,7 @@ export interface UserResponse {
   email: string;
 }
 
-export interface LoginWebResponse extends UserResponse { }
+export interface LoginWebResponse extends UserResponse {}
 
 export interface LoginMobileResponse {
   user: UserResponse;

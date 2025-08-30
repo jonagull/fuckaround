@@ -4,12 +4,11 @@ import { UserEvent } from "./userEvent";
 import { EventType } from "./enums";
 
 export interface Event extends BaseEntity {
-    eventType: EventType;
+  eventName: string;
+  eventDescription: string;
+  eventType: EventType;
 
-    planners: UserEvent[]
-    eventDate: Date;
-    venueAddress: Address;
+  planners: UserEvent[];
+  eventDate: Date;
+  venueAddress: Address;
 }
-
-
-

@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-import { ApiError } from '../lib/ApiError';
-import { apiError } from '../lib/types';
+import { Request, Response, NextFunction } from "express";
+import { ApiError } from "../lib/ApiError";
+import { apiError } from "../lib/types";
 
 export const errorHandler = (
   err: Error | ApiError,
@@ -14,6 +14,6 @@ export const errorHandler = (
   }
 
   // Handle other errors
-  console.error('Unhandled error:', err);
-  res.status(500).json(apiError(500, 'Internal server error'));
+  console.error("Unhandled error:", err);
+  res.status(500).json(apiError(500, "Internal server error"));
 };

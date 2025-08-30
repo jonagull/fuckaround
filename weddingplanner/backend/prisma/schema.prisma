@@ -14,6 +14,7 @@ model User {
   phone          String?
   hashedPassword String
   refreshToken   RefreshToken[]
+  userEvents     UserEvent[]
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 }
@@ -25,4 +26,61 @@ model RefreshToken {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expiresAt DateTime
   createdAt DateTime @default(now())
+}
+
+enum EventType {
+  WEDDING
+  BIRTHDAY
+  CORPORATE
+  OTHER
+}
+
+enum EventRole {
+  OWNER
+  PLANNER
+  VENDOR
+  GUEST
+}
+
+model Address {
+  id        String   @id @default(uuid())
+  street    String
+  city      String
+  state     String
+  zip       String
+  country   String
+  latitude  Float
+  longitude Float
+  placeId   String
+  events    Event[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Event {
+  id               String      @id @default(uuid())
+  eventName        String
+  eventDescription String?
+  eventType        EventType
+  eventDate        DateTime?
+  venueAddressId   String?
+  venueAddress     Address?    @relation(fields: [venueAddressId], references: [id])
+  planners         UserEvent[]
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+}
+
+model UserEvent {
+  id         String    @id @default(uuid())
+  eventId    String
+  event      Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role       EventRole
+  stringRole String
+  blbl       String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@unique([userId, eventId])
 }
