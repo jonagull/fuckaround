@@ -1,4 +1,3 @@
-import Image from "next/image";
 
 export default function Home() {
     return (
@@ -76,7 +75,7 @@ export default function Home() {
                         Everything You Need for Your Special Day
                     </h2>
                     <p className="text-xl text-gray-600 dark:text-gray-300">
-                        From guest management to RSVP tracking, we've got you
+                        From guest management to RSVP tracking, we&apos;ve got you
                         covered
                     </p>
                 </div>
@@ -129,7 +128,7 @@ export default function Home() {
                         </h3>
                         <p className="text-gray-600 dark:text-gray-300">
                             Send beautiful digital invitations to your guests.
-                            Track who's coming and manage your guest list
+                            Track who&apos;s coming and manage your guest list
                             effortlessly.
                         </p>
                     </div>
@@ -155,7 +154,7 @@ export default function Home() {
                         </h3>
                         <p className="text-gray-600 dark:text-gray-300">
                             Real-time RSVP tracking with automatic
-                            notifications. Know exactly who's attending your
+                            notifications. Know exactly who&apos;s attending your
                             special day.
                         </p>
                     </div>
