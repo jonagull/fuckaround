@@ -1,5 +1,5 @@
 import ApiClient from "./client";
-import { LoginMobileResponse, LoginRequest, UserResponse } from "weddingplanner-types";
+import { LoginMobileResponse, LoginRequest, LogoutResponse, UserResponse } from "weddingplanner-types";
 
 const client = new ApiClient();
 
@@ -9,5 +9,9 @@ export const authApi = {
     },
     me: async (): Promise<UserResponse> => {
         return (await client.get('/auth/me')).data;
+    },
+
+    logout: async (): Promise<LogoutResponse> => {
+        return (await client.post('/auth/logout')).data;
     }
 };  

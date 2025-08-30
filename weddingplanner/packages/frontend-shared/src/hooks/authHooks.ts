@@ -20,3 +20,14 @@ export const useMe = () => {
         queryFn: authApi.me,
     });
 }
+
+export const useLogout = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: authApi.logout,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['auth', 'user'] });
+        }
+    })
+}

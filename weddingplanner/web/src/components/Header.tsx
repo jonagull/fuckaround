@@ -2,19 +2,23 @@
 import React from "react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Skeleton } from "./ui/skeleton";
-import { useMe } from "weddingplanner-shared"
+import { useMe, useLogout } from "weddingplanner-shared"
 import { useCurrentUser } from "./CurrentUserContext"
 
 export const Header = () => {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
+    const { mutate: logout } = useLogout()
     const { data: me } = useMe()
-
     const { setCurrentUser } = useCurrentUser()
 
-
     const router = useRouter()
+    const pathname = usePathname()
+
+
+
+
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -31,15 +35,15 @@ export const Header = () => {
 
         const interval = setInterval(checkAuth, 5 * 60 * 1000)
         return () => clearInterval(interval)
-    }, [])
+    }, [pathname])
 
     useEffect(() => {
         if (me) setCurrentUser(me)
-        console.log(me)
     }, [me, setCurrentUser])
 
+
     const handleLogoutClick = () => {
-        setCurrentUser(null)
+        logout()
         router.push('/login')
     }
 
