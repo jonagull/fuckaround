@@ -1,6 +1,2 @@
-export * from "./couple";
-export * from "./user";
-export * from "./baseEnitty";
-export * from "./auth";
-export * from "./api";
+export * from "./types";
 export * from "./consts";
