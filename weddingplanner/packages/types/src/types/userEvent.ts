@@ -1,4 +1,4 @@
-import { BaseEntity } from "./baseEnitty";
+import { BaseEntity } from "./baseEntity";
 import { Event } from "./event";
 import { User } from "./user";
 import { EventRole } from "./enums";

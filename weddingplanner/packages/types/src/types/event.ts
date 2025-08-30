@@ -1,4 +1,4 @@
-import { BaseEntity } from "./baseEnitty";
+import { BaseEntity } from "./baseEntity";
 import { Address } from "./common";
 import { UserEvent } from "./userEvent";
 

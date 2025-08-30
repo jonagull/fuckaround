@@ -1,6 +1,6 @@
 export * from "./api";
 export * from "./auth";
-export * from "./baseEnitty";
+export * from "./baseEntity";
 export * from "./common";
 export * from "./enums";
 export * from "./event";

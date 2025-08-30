@@ -1,4 +1,4 @@
-import { BaseEntity } from "./types/baseEnitty";
+import { BaseEntity } from "./baseEntity";
 import { Personalia } from "./common";
 import { Event } from "./event";
 
