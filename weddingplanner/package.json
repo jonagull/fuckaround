@@ -1,0 +1,27 @@
+{
+  "name": "weddingplanner-monorepo",
+  "private": true,
+  "scripts": {
+    "all": "pnpm install -r",
+    "pub": "./scripts/publish-packages.sh",
+    "publish-types": "cd packages/types && pnpm run pub",
+    "publish-shared": "cd packages/frontend-shared && pnpm run pub",
+    "update-deps": "pnpm -r update",
+    "dev:db": "docker-compose up -d",
+    "dev:backend": "cd backend && pnpm dev",
+    "dev:web": "cd web && pnpm dev",
+    "dev": "concurrently \"pnpm dev:db\" \"pnpm dev:backend\" \"pnpm dev:web\"",
+    "dev:all": "concurrently \"pnpm dev:db\" \"cd packages/types && pnpm dev\" \"cd packages/frontend-shared && pnpm dev\" \"cd backend && pnpm dev\" \"cd web && pnpm dev\"",
+    "build:types": "cd packages/types && pnpm build",
+    "build:shared": "cd packages/frontend-shared && pnpm build",
+    "build:all": "pnpm build:types && pnpm build:shared"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@8.15.0"
+}

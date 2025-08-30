@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.0.24",
+  "version": "1.0.34",
   "description": "Shared React hooks, API utilities, and state management",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -18,7 +18,7 @@
     "@tanstack/react-query": "^5.85.5",
     "@tanstack/react-query-devtools": "^5.85.6",
     "axios": "^1.11.0",
-    "weddingplanner-types": "^1.0.3"
+    "weddingplanner-types": "^1.0.12"
   },
   "peerDependencies": {
     "react": ">=18.0.0",

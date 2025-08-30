@@ -13,6 +13,7 @@ export interface UserEvent extends BaseEntity {
 
 
     stringRole: StringRole;
+    blbl: string;
 }
 
 

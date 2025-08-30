@@ -8,6 +8,8 @@ export const Header = () => {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
     const router = useRouter()
 
+
+
     useEffect(() => {
         const checkAuth = async () => {
             try {
