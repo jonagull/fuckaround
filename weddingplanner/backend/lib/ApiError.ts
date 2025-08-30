@@ -1,4 +1,4 @@
-import { StatusCode } from "@weddingplanner/types";
+import { StatusCode } from "weddingplanner-types";
 
 export class ApiError extends Error {
   statusCode: StatusCode

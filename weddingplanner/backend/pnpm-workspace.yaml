@@ -1,2 +1,2 @@
-ignoredBuiltDependencies:
-  - '@weddingplanner/types'
+onlyBuiltDependencies:
+  - weddingplanner-types

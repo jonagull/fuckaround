@@ -4,7 +4,7 @@ import { prisma } from '../../lib/prisma';
 import { generateAccessToken, generateRefreshToken } from '../../lib/jwt';
 import { asyncHandler } from '../../lib/types';
 import { notFound, unauthorized } from '../../lib/ApiError';
-import { LoginRequest, LoginWebResponse, REFRESH_TOKEN_EXPIRY_MS } from '@weddingplanner/types';
+import { LoginRequest, REFRESH_TOKEN_EXPIRY_MS, LoginWebResponse } from 'weddingplanner-types';
 import { generateExpiryDate, requireExists } from '../../lib/utils';
 
 

@@ -1,9 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authApi } from "../api/authApi";
-import { LoginRequest } from "@weddingplanner/types";
+import { LoginRequest } from "weddingplanner-types";
 
 export const useLogin = () => {
-
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -13,5 +12,4 @@ export const useLogin = () => {
             queryClient.invalidateQueries({ queryKey: ['auth', 'user'] });
         }
     })
-
 }

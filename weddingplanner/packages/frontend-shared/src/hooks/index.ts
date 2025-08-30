@@ -1,1 +1,1 @@
-export { useLogin } from "./authHooks";
+export * from "./authHooks";

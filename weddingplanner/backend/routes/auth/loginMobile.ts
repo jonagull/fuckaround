@@ -3,7 +3,7 @@ import { prisma } from '../../lib/prisma';
 import { generateAccessToken, generateRefreshToken } from '../../lib/jwt';
 import { asyncHandler } from '../../lib/types';
 import { notFound, unauthorized } from '../../lib/ApiError';
-import { LoginRequest, LoginMobileResponse } from '@weddingplanner/types';
+import { LoginRequest, LoginMobileResponse } from 'weddingplanner-types';
 import { generateExpiryDate, requireExists } from '../../lib/utils';
 
 export const loginMobileFunction = asyncHandler<LoginRequest, LoginMobileResponse>(200, async (req) => {

@@ -1,4 +1,4 @@
-import { ApiResponse, StringRole } from '@weddingplanner/types';
+import { ApiResponse } from 'weddingplanner-types';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosError } from 'axios';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3070/api';

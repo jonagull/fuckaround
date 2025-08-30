@@ -34,9 +34,9 @@ services:
       postgres:
         condition: service_healthy
     volumes:
-      - ./backend:/app/backend
-      - ./packages:/app/packages
-      - /app/backend/node_modules
+      - ./backend:/app/backend:cached
+      - backend_node_modules:/app/backend/node_modules
+      - pnpm_store:/app/.pnpm-store
     command: sh -c "pnpm prisma migrate dev --name init && pnpm dev"
 
   web:
@@ -51,11 +51,15 @@ services:
     depends_on:
       - backend
     volumes:
-      - ./web:/app/web
-      - ./packages:/app/packages
-      - /app/web/node_modules
-      - /app/web/.next
+      - ./web:/app/web:cached
+      - web_node_modules:/app/web/node_modules
+      - web_next:/app/web/.next
+      - pnpm_store:/app/.pnpm-store
     command: pnpm dev
 
 volumes:
   postgres_data:
+  backend_node_modules:
+  web_node_modules:
+  web_next:
+  pnpm_store:
