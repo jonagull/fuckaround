@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "./ui/skeleton";
+<<<<<<< Updated upstream
 import { useMe } from "weddingplanner-shared"
 import { useCurrentUser } from "./CurrentUserContext"
 
@@ -15,6 +16,16 @@ export const Header = () => {
 
 
     const router = useRouter()
+=======
+import { useLogout } from "frontend-shared";
+
+export const Header = () => {
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(
+        null
+    );
+    const router = useRouter();
+    const logoutMutation = useLogout();
+>>>>>>> Stashed changes
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -33,6 +44,7 @@ export const Header = () => {
         return () => clearInterval(interval)
     }, [])
 
+<<<<<<< Updated upstream
     useEffect(() => {
         if (me) setCurrentUser(me)
         console.log(me)
@@ -42,6 +54,12 @@ export const Header = () => {
         setCurrentUser(null)
         router.push('/login')
     }
+=======
+    const handleLogoutClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+        logoutMutation.mutate();
+    };
+>>>>>>> Stashed changes
 
     const handleGetStartedClick = (e: React.MouseEvent) => {
         e.preventDefault()
