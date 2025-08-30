@@ -13,7 +13,8 @@
     "dev": "nodemon index.ts",
     "migrate": "prisma migrate dev",
     "migrate:reset": "prisma migrate reset",
-    "studio": "prisma studio"
+    "studio": "prisma studio",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
@@ -21,8 +22,10 @@
   "description": "",
   "dependencies": {
     "@prisma/client": "^6.15.0",
+    "@types/cors": "^2.8.19",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "prisma": "^6.15.0",

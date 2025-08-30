@@ -7,7 +7,7 @@
     "declaration": true,
     "declarationMap": true,
     "outDir": "./dist",
-    "rootDir": "./",
+    "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -19,9 +19,7 @@
     "incremental": true
   },
   "include": [
-    "src/api/**/*",
-    "src/hooks/**/*",
-    "index.ts"
+    "src/**/*",
   ],
   "exclude": [
     "node_modules",

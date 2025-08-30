@@ -2,41 +2,6 @@
 export default function Home() {
     return (
         <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-            {/* Navigation */}
-            <nav className="flex items-center justify-between p-6 max-w-7xl mx-auto">
-                <div className="flex items-center space-x-2">
-                    <div className="w-8 h-8 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
-                        <span className="text-white font-bold text-sm">W</span>
-                    </div>
-                    <span className="text-xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
-                        WeddingPlanner
-                    </span>
-                </div>
-                <div className="flex items-center space-x-4">
-                    <a
-                        href="/wedding-wizard"
-                        className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
-                    >
-                        Wedding Planner
-                    </a>
-                    <a
-                        href="/table-planning"
-                        className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
-                    >
-                        Table Planning
-                    </a>
-                    <button className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors">
-                        Login
-                    </button>
-                    <a
-                        href="/wedding-wizard"
-                        className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-full hover:from-rose-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl"
-                    >
-                        Get Started
-                    </a>
-                </div>
-            </nav>
-
             {/* Hero Section */}
             <section className="max-w-7xl mx-auto px-6 py-20 text-center">
                 <div className="max-w-4xl mx-auto">

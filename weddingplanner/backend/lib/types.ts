@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { ApiSuccess, ApiError, StatusCode } from '@weddingplanner/types';
+import { ApiSuccess, ApiError, StatusCode } from 'weddingplanner-types';
 
 /**
  * Simple typed request - just type the body, params, and query
