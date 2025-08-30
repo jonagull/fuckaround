@@ -14,6 +14,7 @@ import {
     markStepCompleted,
     getWizardProgress,
 } from "./utils/progress";
+import Dashboard from "./steps/Dashboard";
 
 export interface WeddingData {
     // Onboarding data
@@ -153,11 +154,12 @@ export default function WeddingWizardPage() {
         switch (currentStep) {
             case 1:
                 return (
-                    <OnboardingStep
-                        data={weddingData}
-                        updateData={updateWeddingData}
-                        onNext={nextStep}
-                    />
+                    // <OnboardingStep
+                    //     data={weddingData}
+                    //     updateData={updateWeddingData}
+                    //     onNext={nextStep}
+                    // />
+                    <Dashboard userId="1" />
                 );
             case 2:
                 return (

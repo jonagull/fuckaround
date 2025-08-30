@@ -8,14 +8,15 @@ datasource db {
 }
 
 model User {
-  id             String        @id @default(uuid())
-  email          String        @unique
+  id             String         @id @default(uuid())
+  email          String         @unique
   name           String
   phone          String?
   hashedPassword String
   refreshToken   RefreshToken[]
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  weddingDetails WeddingDetails?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
 }
 
 model RefreshToken {
@@ -25,4 +26,17 @@ model RefreshToken {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expiresAt DateTime
   createdAt DateTime @default(now())
+}
+
+model WeddingDetails {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  partnerOneName String
+  partnerTwoName String
+  weddingDate    String   // Using String to match frontend date input format
+  venue          String
+  guestEstimate  Int
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }

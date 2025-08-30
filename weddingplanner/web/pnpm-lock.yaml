@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@tanstack/react-query':
+        specifier: ^5.85.5
+        version: 5.85.5(react@19.1.0)
       '@weddingplanner/frontend-shared':
         specifier: file:../packages/frontend-shared
         version: file:../packages/frontend-shared(@tanstack/react-query@5.85.5(react@19.1.0))(react@19.1.0)(zustand@4.5.7(@types/react@19.1.12)(react@19.1.0))

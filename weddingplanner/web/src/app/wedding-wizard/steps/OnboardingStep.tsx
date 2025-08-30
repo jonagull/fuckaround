@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { WeddingData } from "../page";
+import { WeddingDetails as BaseWeddingDetails } from "@weddingplanner/types";
+import { useMutation } from "@tanstack/react-query";
+
+// Use the base WeddingDetails type directly
+type WeddingDetails = BaseWeddingDetails;
 import {
     Card,
     CardHeader,
@@ -11,12 +15,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Heart, Calendar, MapPin, Users, Palette, Check } from "lucide-react";
+import { Heart, Calendar, MapPin, Users, Check } from "lucide-react";
 import { markStepCompleted } from "../utils/progress";
+import { useWeddingDetails } from "@weddingplanner/frontend-shared/hooks";
 
 interface OnboardingStepProps {
-    data: WeddingData;
-    updateData: (updates: Partial<WeddingData>) => void;
+    data: WeddingDetails;
+    updateData: (updates: Partial<WeddingDetails>) => void;
     onNext: () => void;
 }
 
@@ -27,7 +32,48 @@ export function OnboardingStep({
 }: OnboardingStepProps) {
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-    const validateAndNext = () => {
+    // Direct API call function
+    const postWeddingDetailsAPI = async (
+        weddingDetails: Omit<WeddingDetails, "id" | "createdAt" | "updatedAt">
+    ) => {
+        const response = await fetch(
+            "http://localhost:3070/api/wedding-details",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+                body: JSON.stringify(weddingDetails),
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(
+                `Failed to post wedding details: ${response.statusText}`
+            );
+        }
+
+        return response.json();
+    };
+
+    // export default function Dashboard({ userId }: { userId: string }) {
+    //   const { data, isLoading, error } = useWeddingDetails(userId);
+
+    //   if (isLoading) return <p>Loading...</p>;
+    //   if (error) return <p>Error loading wedding details</p>;
+
+    //   return (
+    //     <div>
+    //       <h1>{data.partnerOneName} & {data.partnerTwoName}</h1>
+    //       <p>Date: {data.weddingDate}</p>
+    //       <p>Venue: {data.venue}</p>
+    //       <p>Guests: {data.guestEstimate}</p>
+    //     </div>
+    //   );
+    // }
+
+    const validateAndNext = async () => {
         const newErrors: { [key: string]: string } = {};
 
         if (!data.partnerOneName.trim()) {
@@ -49,20 +95,26 @@ export function OnboardingStep({
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length === 0) {
-            onNext();
+            try {
+                // Post wedding details to backend
+                // await postWeddingDetailsMutation.mutateAsync({
+                //     userId: "temp-user-id", // TODO: Get actual user ID from auth
+                //     partnerOneName: data.partnerOneName,
+                //     partnerTwoName: data.partnerTwoName,
+                //     weddingDate: data.weddingDate,
+                //     venue: data.venue,
+                //     guestEstimate: data.guestEstimate,
+                // });
+
+                onNext();
+            } catch (error) {
+                console.error("Failed to save wedding details:", error);
+                setErrors({
+                    submit: "Failed to save wedding details. Please try again.",
+                });
+            }
         }
     };
-
-    const themes = [
-        "Classic & Elegant",
-        "Rustic & Natural",
-        "Modern & Minimalist",
-        "Vintage & Romantic",
-        "Beach & Tropical",
-        "Garden & Outdoor",
-        "Industrial & Urban",
-        "Bohemian & Free-spirited",
-    ];
 
     return (
         <Card className="shadow-sm">
@@ -232,36 +284,17 @@ export function OnboardingStep({
                             </p>
                         )}
                     </div>
-
-                    {/* Theme */}
-                    <div className="md:col-span-2 space-y-2">
-                        <Label
-                            htmlFor="theme"
-                            className="flex items-center gap-2"
-                        >
-                            <Palette className="w-4 h-4 text-rose-500" />
-                            Wedding Theme (Optional)
-                        </Label>
-                        <select
-                            id="theme"
-                            value={data.theme}
-                            onChange={(e) =>
-                                updateData({ theme: e.target.value })
-                            }
-                            className="w-full h-11 px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
-                        >
-                            <option value="">Select a theme (optional)</option>
-                            {themes.map((theme) => (
-                                <option key={theme} value={theme}>
-                                    {theme}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
                 </div>
             </CardContent>
 
-            <CardFooter className="flex flex-col sm:flex-row justify-between gap-3 pt-6 px-4 lg:px-6">
+            {/* <CardFooter className="flex flex-col sm:flex-row justify-between gap-3 pt-6 px-4 lg:px-6">
+                {errors.submit && (
+                    <div className="w-full">
+                        <p className="text-red-500 text-sm mb-3">
+                            {errors.submit}
+                        </p>
+                    </div>
+                )}
                 <Button
                     variant="outline"
                     onClick={() => markStepCompleted(1)}
@@ -273,11 +306,14 @@ export function OnboardingStep({
                 <Button
                     onClick={validateAndNext}
                     size="lg"
-                    className="w-full sm:w-auto bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white shadow-md hover:shadow-lg transition-all duration-200"
+                    disabled={postWeddingDetailsMutation.isPending}
+                    className="w-full sm:w-auto bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-50"
                 >
-                    Continue to Guest List
+                    {postWeddingDetailsMutation.isPending
+                        ? "Saving..."
+                        : "Continue to Guest List"}
                 </Button>
-            </CardFooter>
+            </CardFooter> */}
         </Card>
     );
 }
