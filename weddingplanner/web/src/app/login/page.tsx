@@ -149,6 +149,22 @@ export default function Login() {
                         >
                             {isPending ? "Signing in..." : "Sign in"}
                         </Button>
+
+                        <div className="pt-2">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                className="w-full text-sm"
+                                onClick={() => {
+                                    setEmail("test@example.com");
+                                    setPassword("password123");
+                                    setFormErrors({});
+                                }}
+                                disabled={isPending}
+                            >
+                                Fill Test Data
+                            </Button>
+                        </div>
                     </form>
                 </CardContent>
             </Card>
