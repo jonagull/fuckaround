@@ -39,7 +39,7 @@ importers:
         specifier: ^6.15.0
         version: 6.15.0(typescript@5.9.2)
       weddingplanner-types:
-        specifier: ^1.0.12
+        specifier: 1.0.17
         version: link:../packages/types
     devDependencies:
       '@types/bcrypt':
@@ -82,7 +82,7 @@ importers:
         specifier: '>=18.0.0'
         version: 19.1.0
       weddingplanner-types:
-        specifier: ^1.0.12
+        specifier: 1.0.17
         version: link:../types
       zustand:
         specifier: ^4.0.0
@@ -140,7 +140,7 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1
       weddingplanner-shared:
-        specifier: ^1.0.34
+        specifier: 1.0.38
         version: link:../packages/frontend-shared
     devDependencies:
       '@eslint/eslintrc':
