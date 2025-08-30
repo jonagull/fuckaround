@@ -19,8 +19,8 @@
     "incremental": true
   },
   "include": [
-    "api/**/*",
-    "hooks/**/*",
+    "src/api/**/*",
+    "src/hooks/**/*",
     "index.ts"
   ],
   "exclude": [

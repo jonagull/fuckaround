@@ -1,3 +1,4 @@
+import { STRING_ROLES } from "../consts/stringRole";
 
 export interface Address {
     street: string;
@@ -19,3 +20,5 @@ export interface Personalia {
     phoneNumber: string;
     phoneCountryCode: string;
 }
+
+export type StringRole = typeof STRING_ROLES[number];

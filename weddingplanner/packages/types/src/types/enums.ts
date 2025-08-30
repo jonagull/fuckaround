@@ -4,3 +4,16 @@ export enum EventRole {
     Editor,
     Reader,
 }
+
+export enum InvitationStatus {
+    Pending,
+    Accepted,
+    Rejected,
+}
+
+
+export enum EventType {
+    Wedding,
+    Birthday,
+    Other,
+}
