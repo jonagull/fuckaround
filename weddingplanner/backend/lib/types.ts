@@ -55,6 +55,6 @@ export const asyncHandler = <BodyType = unknown, ResponseType = unknown, ParamsT
   };
 };
 
-export type AuthenticatedRequest<T> = TypedRequest<EmptyBody> & {
+export type AuthenticatedRequest<T> = TypedRequest<T> & {
   userId?: string;
 };
