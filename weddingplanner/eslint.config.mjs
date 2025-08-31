@@ -74,7 +74,6 @@ export default [
       curly: ["error", "all"],
       "no-empty-function": "error",
       "prefer-arrow-callback": "error",
-      "arrow-body-style": ["error", "as-needed"],
       "no-multiple-empty-lines": ["error", { max: 1, maxEOF: 0 }],
       "no-trailing-spaces": "error",
       "comma-dangle": ["error", "always-multiline"],

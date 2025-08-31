@@ -6,6 +6,7 @@ import { Button } from "./ui/button";
 import { EventType, IRequestCreateEvent, useCreateEvent } from "weddingplanner-shared";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Dialog, DialogTitle, DialogTrigger, DialogContent } from "./ui/dialog";
+import { AddressSearch } from "./AddressSearch";
 
 export function CreateEventModal() {
 
@@ -72,10 +73,19 @@ export function CreateEventModal() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value={EventType.WEDDING}>Wedding</SelectItem>
+                  <SelectItem value={EventType.BIRTHDAY}>Birthday</SelectItem>
+                  <SelectItem value={EventType.OTHER}>Other</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-
+            <div>
+              <Label htmlFor="venueAddress">Venue Address</Label>
+              <AddressSearch
+                value={formData.venueAddress}
+                onChange={(address) => setFormData({ ...formData, venueAddress: address })}
+                className="mt-1"
+              />
+            </div>
           </div>
           <div className="mt-4">
             <Label htmlFor="eventDescription">Event Description</Label>

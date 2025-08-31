@@ -56,7 +56,7 @@ export function EventCard({ event }: { event: Event }) {
         </div>
       </div>
 
-      <Link href={`/event/${event.id}`} className="block">
+      <Link href={`/protected/event/${event.id}`} className="block">
         <Button className="w-full bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 group-hover:scale-[1.02] transition-all duration-200">
           Open Event
           <ArrowRight className="ml-2 h-4 w-4" />

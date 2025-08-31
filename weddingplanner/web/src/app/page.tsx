@@ -20,6 +20,7 @@ import { useGetEvents } from "weddingplanner-shared";
 import { toast } from "sonner";
 import { EventCard } from "@/components/EventCard";
 import { CreateEventModal } from "@/components/CreateEventModal";
+import PageWrapper from "@/components/PageWrapper";
 
 
 export default function Home() {
@@ -30,22 +31,9 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="max-w-7xl mx-auto p-6">
+      <PageWrapper>
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-lg">W</span>
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
-                  WeddingPlanner
-                </h1>
-                <p className="text-gray-600 dark:text-gray-300">Manage all your wedding projects</p>
-              </div>
-            </div>
-          </div>
+        <div className="flex items-center justify-end mb-8">
           <div className="flex items-center space-x-3">
             <Button variant="outline">
               <Settings className="mr-2 h-4 w-4" />
@@ -152,7 +140,7 @@ export default function Home() {
             </p>
           </div>
         )}
-      </div>
+      </PageWrapper>
     </div>
   );
 }

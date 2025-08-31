@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { ApiSuccess, ApiError, StatusCode, EmptyBody } from "weddingplanner-types";
+import { ApiSuccess, ApiError, StatusCode } from "weddingplanner-types";
 
 /**
  * Simple typed request - just type the body, params, and query
@@ -62,6 +62,6 @@ export const asyncHandler = <BodyType = unknown, ResponseType = unknown, ParamsT
   };
 };
 
-export type AuthenticatedRequest<T> = TypedRequest<T> & {
+export type AuthenticatedRequest<T, ParamsType = unknown> = TypedRequest<T, ParamsType> & {
   userId?: string;
 };

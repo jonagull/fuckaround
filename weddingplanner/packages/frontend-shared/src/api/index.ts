@@ -1,2 +1,3 @@
+export { addressSearchApi } from "./addressSearchApi";
 export { authApi } from "./authApi";
 export { eventApi } from "./eventApi";

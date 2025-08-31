@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.0.20-create-event.4",
+  "version": "1.0.20-address.5",
   "description": "Shared TypeScript types for wedding planner application",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

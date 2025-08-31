@@ -34,3 +34,8 @@ export const useDeleteEvent = () => {
     },
   });
 };
+
+export const useGetEvent = (id: string) => useQuery({
+  queryKey: ["event", id],
+  queryFn: () => eventApi.getEvent(id),
+});
