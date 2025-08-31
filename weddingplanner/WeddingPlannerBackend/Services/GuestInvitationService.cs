@@ -9,10 +9,14 @@ namespace WeddingPlannerBackend.Services;
 public class GuestInvitationService : IGuestInvitationService
 {
   private readonly ApplicationDbContext _context;
+  private readonly IEmailService _emailService;
+  private readonly IConfiguration _configuration;
 
-  public GuestInvitationService(ApplicationDbContext context)
+  public GuestInvitationService(ApplicationDbContext context, IEmailService emailService, IConfiguration configuration)
   {
     _context = context;
+    _emailService = emailService;
+    _configuration = configuration;
   }
 
   public async Task<ResponseGuestInvitation> CreateInvitationAsync(Guid userId, RequestCreateGuestInvitation request)
@@ -190,6 +194,207 @@ public class GuestInvitationService : IGuestInvitationService
       GuestPhoneNumber = invitation.GuestPhoneNumber,
       GuestPhoneCountryCode = invitation.GuestPhoneCountryCode,
       InvitedAt = invitation.InvitedAt,
+      EmailSentAt = invitation.EmailSentAt,
+      AcceptedAt = invitation.AcceptedAt,
+      RejectedAt = invitation.RejectedAt,
+      AdditionalGuestsCount = invitation.AdditionalGuestsCount,
+      AdditionalGuests = additionalGuests,
+      CreatedAt = invitation.CreatedAt,
+      UpdatedAt = invitation.UpdatedAt
+    };
+  }
+
+  public async Task<SendInvitationsResponse> SendInvitationsAsync(Guid userId, SendInvitationsRequest request)
+  {
+    var response = new SendInvitationsResponse
+    {
+      TotalRequested = request.InvitationIds.Count
+    };
+
+    // Verify user has access to send invitations
+    var invitations = await _context.Invitations
+        .Include(i => i.Event)
+        .Where(i => request.InvitationIds.Contains(i.Id))
+        .ToListAsync();
+
+    if (!invitations.Any())
+    {
+      throw new KeyNotFoundException("No invitations found");
+    }
+
+    // Check if user has permission for all invitations
+    var eventIds = invitations.Select(i => i.EventId).Distinct();
+    var userEvents = await _context.UserEvents
+        .Where(ue => ue.UserId == userId && eventIds.Contains(ue.EventId))
+        .ToListAsync();
+
+    foreach (var eventId in eventIds)
+    {
+      var userEvent = userEvents.FirstOrDefault(ue => ue.EventId == eventId);
+      if (userEvent == null || (userEvent.Role != EventRole.OWNER && userEvent.Role != EventRole.PLANNER))
+      {
+        throw new UnauthorizedAccessException("You don't have permission to send invitations for this event");
+      }
+    }
+
+    // Get base URL from configuration or use localhost for development
+    var baseUrl = _configuration["BaseUrl"] ?? "http://localhost:3050";
+
+    // Send emails for each invitation
+    foreach (var invitation in invitations)
+    {
+      var result = new InvitationSendResult
+      {
+        InvitationId = invitation.Id
+      };
+
+      try
+      {
+        // Generate invitation URL
+        var invitationUrl = $"{baseUrl}/invitation/{invitation.Id}";
+        result.InvitationUrl = invitationUrl;
+
+        // Send email
+        var emailSent = await _emailService.SendInvitationEmailAsync(
+            invitation.GuestEmail,
+            invitation.Event.EventName,
+            invitationUrl
+        );
+
+        if (emailSent)
+        {
+          // Update invitation with email sent timestamp
+          invitation.EmailSentAt = DateTime.UtcNow;
+          invitation.UpdatedAt = DateTime.UtcNow;
+          
+          result.Success = true;
+          response.SuccessfullySent++;
+        }
+        else
+        {
+          result.Success = false;
+          result.ErrorMessage = "Failed to send email";
+          response.Failed++;
+        }
+      }
+      catch (Exception ex)
+      {
+        result.Success = false;
+        result.ErrorMessage = ex.Message;
+        response.Failed++;
+      }
+
+      response.Results.Add(result);
+    }
+
+    // Save changes to database
+    await _context.SaveChangesAsync();
+
+    return response;
+  }
+
+  public async Task<ResponseGuestInvitation> AcceptInvitationAsync(Guid invitationId, AcceptInvitationRequest request)
+  {
+    var invitation = await _context.Invitations
+        .Include(i => i.Event)
+        .FirstOrDefaultAsync(i => i.Id == invitationId);
+
+    if (invitation == null)
+    {
+      throw new KeyNotFoundException("Invitation not found");
+    }
+
+    if (invitation.AcceptedAt != null)
+    {
+      throw new InvalidOperationException("Invitation has already been accepted");
+    }
+
+    // Update invitation
+    invitation.AcceptedAt = DateTime.UtcNow;
+    invitation.RejectedAt = null; // Clear any previous rejection
+    invitation.UpdatedAt = DateTime.UtcNow;
+
+    // Handle additional guests
+    if (request.AdditionalGuests != null && request.AdditionalGuests.Any())
+    {
+      var additionalGuestsList = request.AdditionalGuests
+          .Select(g => {
+              var parts = g.Name.Split(' ', 2);
+              return new AdditionalGuest { 
+                  FirstName = parts.Length > 0 ? parts[0] : "",
+                  LastName = parts.Length > 1 ? parts[1] : ""
+              };
+          })
+          .ToList();
+      
+      invitation.AdditionalGuests = JsonSerializer.Serialize(additionalGuestsList);
+      invitation.AdditionalGuestsCount = additionalGuestsList.Count();
+    }
+
+    await _context.SaveChangesAsync();
+
+    return MapToResponse(invitation);
+  }
+
+  public async Task<ResponseGuestInvitation> DeclineInvitationAsync(Guid invitationId)
+  {
+    var invitation = await _context.Invitations
+        .Include(i => i.Event)
+        .FirstOrDefaultAsync(i => i.Id == invitationId);
+
+    if (invitation == null)
+    {
+      throw new KeyNotFoundException("Invitation not found");
+    }
+
+    if (invitation.RejectedAt != null)
+    {
+      throw new InvalidOperationException("Invitation has already been declined");
+    }
+
+    // Update invitation
+    invitation.RejectedAt = DateTime.UtcNow;
+    invitation.AcceptedAt = null; // Clear any previous acceptance
+    invitation.UpdatedAt = DateTime.UtcNow;
+    
+    // Clear additional guests if any
+    invitation.AdditionalGuests = "[]";
+    invitation.AdditionalGuestsCount = 0;
+
+    await _context.SaveChangesAsync();
+
+    return MapToResponse(invitation);
+  }
+
+  private ResponseGuestInvitation MapToResponse(Invitation invitation)
+  {
+    var additionalGuests = new List<AdditionalGuest>();
+    
+    if (!string.IsNullOrEmpty(invitation.AdditionalGuests))
+    {
+      try
+      {
+        additionalGuests = JsonSerializer.Deserialize<List<AdditionalGuest>>(invitation.AdditionalGuests) ?? new List<AdditionalGuest>();
+      }
+      catch
+      {
+        // If deserialization fails, return empty list
+      }
+    }
+
+    return new ResponseGuestInvitation
+    {
+      Id = invitation.Id,
+      EventId = invitation.EventId,
+      EventName = invitation.Event?.EventName ?? string.Empty,
+      EventDate = invitation.Event?.EventDate,
+      GuestFirstName = invitation.GuestFirstName,
+      GuestLastName = invitation.GuestLastName,
+      GuestEmail = invitation.GuestEmail,
+      GuestPhoneNumber = invitation.GuestPhoneNumber,
+      GuestPhoneCountryCode = invitation.GuestPhoneCountryCode,
+      InvitedAt = invitation.InvitedAt,
+      EmailSentAt = invitation.EmailSentAt,
       AcceptedAt = invitation.AcceptedAt,
       RejectedAt = invitation.RejectedAt,
       AdditionalGuestsCount = invitation.AdditionalGuestsCount,

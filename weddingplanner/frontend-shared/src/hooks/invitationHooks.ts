@@ -1,6 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { invitationApi } from "../api";
-import { type IRequestCreateInvitation, type IRequestUpdateInvitation } from "../types";
+import {
+  type IRequestCreateInvitation,
+  type IRequestUpdateInvitation,
+  type GuestInvitation,
+  type SendInvitationsResponse,
+  type AdditionalGuestInput
+} from "../types";
 
 export const useCreateInvitation = () => {
   const queryClient = useQueryClient();
@@ -15,7 +21,7 @@ export const useCreateInvitation = () => {
   });
 };
 
-export const useGetInvitations = (eventId: string) => useQuery({
+export const useGetInvitations = (eventId: string) => useQuery<GuestInvitation[], Error>({
   queryKey: ["invitations", eventId],
   queryFn: () => invitationApi.getInvitations(eventId),
   enabled: !!eventId,
@@ -24,7 +30,7 @@ export const useGetInvitations = (eventId: string) => useQuery({
 export const useUpdateInvitation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ invitationId, data }: { invitationId: string; data: IRequestUpdateInvitation }) => 
+    mutationFn: ({ invitationId, data }: { invitationId: string; data: IRequestUpdateInvitation }) =>
       invitationApi.updateInvitation(invitationId, data),
     onSuccess: (updatedInvitation) => {
       queryClient.invalidateQueries({ queryKey: ["invitations", updatedInvitation.eventId] });
@@ -38,13 +44,55 @@ export const useUpdateInvitation = () => {
 export const useDeleteInvitation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ invitationId, eventId }: { invitationId: string; eventId: string }) => 
+    mutationFn: ({ invitationId, eventId }: { invitationId: string; eventId: string }) =>
       invitationApi.deleteInvitation(invitationId),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["invitations", variables.eventId] });
     },
     onError: (error) => {
       console.error("Error deleting invitation:", error);
+    },
+  });
+};
+
+export const useSendGuestInvitations = () => {
+  const queryClient = useQueryClient();
+  return useMutation<SendInvitationsResponse, Error, { invitationIds: string[]; eventId: string }>({
+    mutationFn: ({ invitationIds }) =>
+      invitationApi.sendGuestInvitations(invitationIds),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["invitations", variables.eventId] });
+    },
+    onError: (error) => {
+      console.error("Error sending invitations:", error);
+    },
+  });
+};
+
+export const useGetGuestInvitation = (invitationId: string) => useQuery<GuestInvitation, Error>({
+  queryKey: ["guest-invitation", invitationId],
+  queryFn: () => invitationApi.getGuestInvitation(invitationId),
+  enabled: !!invitationId,
+  retry: false,
+});
+
+export const useAcceptGuestInvitation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<GuestInvitation, Error, { invitationId: string; additionalGuests?: AdditionalGuestInput[] }>({
+    mutationFn: ({ invitationId, additionalGuests }) =>
+      invitationApi.acceptGuestInvitation(invitationId, additionalGuests),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["guest-invitation", variables.invitationId] });
+    },
+  });
+};
+
+export const useDeclineGuestInvitation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<GuestInvitation, Error, string>({
+    mutationFn: (invitationId) => invitationApi.declineGuestInvitation(invitationId),
+    onSuccess: (_, invitationId) => {
+      queryClient.invalidateQueries({ queryKey: ["guest-invitation", invitationId] });
     },
   });
 };

@@ -47,6 +47,7 @@ builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IInvitationService, InvitationService>();
 builder.Services.AddScoped<IGuestInvitationService, GuestInvitationService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddHttpClient<IAddressSearchService, AddressSearchService>();
 
 var app = builder.Build();

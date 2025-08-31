@@ -52,6 +52,7 @@ public class GuestInvitationController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [AllowAnonymous] // Allow public access to view invitation
     public async Task<ActionResult<ResponseGuestInvitation>> GetInvitation(Guid id)
     {
         try
@@ -115,6 +116,67 @@ public class GuestInvitationController : ControllerBase
         catch (KeyNotFoundException ex)
         {
             return NotFound(new { message = ex.Message });
+        }
+    }
+
+    [HttpPost("{id}/accept")]
+    [AllowAnonymous] // Allow public access to accept invitation
+    public async Task<ActionResult<ResponseGuestInvitation>> AcceptInvitation(Guid id, [FromBody] AcceptInvitationRequest request)
+    {
+        try
+        {
+            var result = await _guestInvitationService.AcceptInvitationAsync(id, request);
+            return Ok(result);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpPost("{id}/decline")]
+    [AllowAnonymous] // Allow public access to decline invitation
+    public async Task<ActionResult<ResponseGuestInvitation>> DeclineInvitation(Guid id)
+    {
+        try
+        {
+            var result = await _guestInvitationService.DeclineInvitationAsync(id);
+            return Ok(result);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpPost("send-invitations")]
+    public async Task<ActionResult<SendInvitationsResponse>> SendInvitations([FromBody] SendInvitationsRequest request)
+    {
+        try
+        {
+            var userId = GetUserId();
+            var result = await _guestInvitationService.SendInvitationsAsync(userId, request);
+            return Ok(result);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Forbid(ex.Message);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
         }
     }
 }

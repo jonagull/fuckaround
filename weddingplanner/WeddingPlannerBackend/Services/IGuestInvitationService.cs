@@ -9,4 +9,7 @@ public interface IGuestInvitationService
     Task<ResponseGuestInvitation> UpdateInvitationAsync(Guid invitationId, Guid userId, RequestUpdateGuestInvitation request);
     Task DeleteInvitationAsync(Guid invitationId, Guid userId);
     Task<ResponseGuestInvitation> GetInvitationByIdAsync(Guid invitationId);
+    Task<SendInvitationsResponse> SendInvitationsAsync(Guid userId, SendInvitationsRequest request);
+    Task<ResponseGuestInvitation> AcceptInvitationAsync(Guid invitationId, AcceptInvitationRequest request);
+    Task<ResponseGuestInvitation> DeclineInvitationAsync(Guid invitationId);
 }

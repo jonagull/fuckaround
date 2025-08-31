@@ -29,6 +29,7 @@ public class Invitation
   public string GuestPhoneCountryCode { get; set; } = string.Empty;
 
   public DateTime InvitedAt { get; set; } = DateTime.UtcNow;
+  public DateTime? EmailSentAt { get; set; }
   public DateTime? AcceptedAt { get; set; }
   public DateTime? RejectedAt { get; set; }
 

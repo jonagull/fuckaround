@@ -6,6 +6,7 @@ export * from "./common";
 export * from "./enums";
 export * from "./event";
 export * from "./invitation";
+export * from "./guestInvitation";
 export * from "./plannerInvitation";
 export * from "./user";
 export * from "./userEvent";

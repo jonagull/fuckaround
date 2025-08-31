@@ -4,7 +4,11 @@ import {
   type Invitation,
   type IRequestCreateInvitation,
   type IResponseCreateInvitation,
-  type IRequestUpdateInvitation
+  type IRequestUpdateInvitation,
+  type GuestInvitation,
+  type SendInvitationsResponse,
+  type AcceptInvitationRequest,
+  type AdditionalGuestInput
 } from "../types";
 import ApiClient from "./client";
 
@@ -51,8 +55,8 @@ export const invitationApi = {
     return await client.post<IResponseCreateInvitation, IRequestCreateInvitation>("/guest-invitations", invitation);
   },
 
-  getInvitations: async (eventId: string): Promise<ResponseInvitation[]> => {
-    return await client.get<ResponseInvitation[]>(`/guest-invitations/event/${eventId}`);
+  getInvitations: async (eventId: string): Promise<GuestInvitation[]> => {
+    return await client.get<GuestInvitation[]>(`/guest-invitations/event/${eventId}`);
   },
 
   updateInvitation: async (invitationId: string, data: IRequestUpdateInvitation): Promise<Invitation> => {
@@ -61,5 +65,28 @@ export const invitationApi = {
 
   deleteInvitation: async (invitationId: string): Promise<void> => {
     await client.delete(`/guest-invitations/${invitationId}`);
+  },
+
+  // Send email invitations to multiple guests
+  sendGuestInvitations: async (invitationIds: string[]): Promise<SendInvitationsResponse> => {
+    return await client.post<SendInvitationsResponse>("/guest-invitations/send-invitations", { invitationIds });
+  },
+
+  // Get a single guest invitation by ID (public endpoint, no auth required)
+  getGuestInvitation: async (invitationId: string): Promise<GuestInvitation> => {
+    return await client.get<GuestInvitation>(`/guest-invitations/${invitationId}`);
+  },
+
+  // Accept a guest invitation (public endpoint)
+  acceptGuestInvitation: async (invitationId: string, additionalGuests?: AdditionalGuestInput[]): Promise<GuestInvitation> => {
+    const request: AcceptInvitationRequest = {
+      additionalGuests: additionalGuests || []
+    };
+    return await client.post<GuestInvitation, AcceptInvitationRequest>(`/guest-invitations/${invitationId}/accept`, request);
+  },
+
+  // Decline a guest invitation (public endpoint)
+  declineGuestInvitation: async (invitationId: string): Promise<GuestInvitation> => {
+    return await client.post<GuestInvitation>(`/guest-invitations/${invitationId}/decline`);
   },
 };

@@ -142,13 +142,13 @@ export function SendInvitationModal({
           </div>
           <div className="grid gap-2">
             <Label htmlFor="role">Role</Label>
-            <Select value={selectedRole} onValueChange={(value) => setSelectedRole(value as EventRole)}>
+            <Select value={selectedRole.toString()} onValueChange={(value) => setSelectedRole(Number(value) as EventRole)}>
               <SelectTrigger id="role">
                 <SelectValue placeholder="Select a role" />
               </SelectTrigger>
               <SelectContent>
                 {availableRoles.map((role) => (
-                  <SelectItem key={role} value={role}>
+                  <SelectItem key={role} value={role.toString()}>
                     {role === EventRole.OWNER ? "Owner" :
                      role === EventRole.PLANNER ? "Planner" :
                      role === EventRole.VENDOR ? "Vendor" : "Guest"}
