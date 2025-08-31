@@ -21,13 +21,6 @@ export interface RequestAddress {
   placeId: string;
 }
 
-export interface RequestUpdateEvent {
-  eventName?: string;
-  eventDescription?: string;
-  eventType?: EventType;
-  eventDate?: Date | string;
-  venueAddress?: RequestAddress;
-}
 
 export interface RequestAddUserToEvent {
   email: string;
@@ -75,4 +68,4 @@ export interface IRequestCreateEvent {
   venueAddress: Nullable<Address>;
 }
 
-export interface IResponseCreateEvent extends ResponseEvent {}
+export interface IResponseCreateEvent extends ResponseEvent { }

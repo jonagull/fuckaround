@@ -1,11 +1,11 @@
 import {
   RequestCreateEvent,
-  RequestUpdateEvent,
   RequestAddUserToEvent,
   ResponseEvent,
   ResponseUserEvent,
   IRequestCreateEvent,
 } from "../types";
+import { RequestUpdateEvent } from "../types/requests/updateEvent";
 import ApiClient from "./client";
 
 const client = new ApiClient();
@@ -21,37 +21,23 @@ export const eventApi = {
   },
 
   // Get all user events
-  getEvents: async (): Promise<ResponseEvent[]> => {
-    return await client.get<ResponseEvent[]>("/events");
-  },
+  getEvents: async (): Promise<ResponseEvent[]> => await client.get<ResponseEvent[]>("/events"),
 
   // Get a specific event
-  getEvent: async (id: string): Promise<ResponseEvent> => {
-    return await client.get<ResponseEvent>(`/events/${id}`);
-  },
+  getEvent: async (id: string): Promise<ResponseEvent> => await client.get<ResponseEvent>(`/events/${id}`),
 
   // Update an event
-  updateEvent: async (id: string, event: RequestUpdateEvent): Promise<ResponseEvent> => {
-    return await client.put<ResponseEvent, RequestUpdateEvent>(`/events/${id}`, event);
-  },
+  updateEvent: async (id: string, event: RequestUpdateEvent): Promise<ResponseEvent> => await client.put<ResponseEvent, RequestUpdateEvent>(`/events/${id}`, event),
 
   // Delete an event
-  deleteEvent: async (id: string): Promise<void> => {
-    await client.delete<void>(`/events/${id}`);
-  },
+  deleteEvent: async (id: string): Promise<void> => await client.delete<void>(`/events/${id}`),
 
   // Add user to event
-  addUserToEvent: async (eventId: string, request: RequestAddUserToEvent): Promise<ResponseUserEvent> => {
-    return await client.post<ResponseUserEvent, RequestAddUserToEvent>(`/events/${eventId}/users`, request);
-  },
+  addUserToEvent: async (eventId: string, request: RequestAddUserToEvent): Promise<ResponseUserEvent> => await client.post<ResponseUserEvent, RequestAddUserToEvent>(`/events/${eventId}/users`, request),
 
   // Remove user from event
-  removeUserFromEvent: async (eventId: string, userId: string): Promise<void> => {
-    await client.delete<void>(`/events/${eventId}/users/${userId}`);
-  },
+  removeUserFromEvent: async (eventId: string, userId: string): Promise<void> => await client.delete<void>(`/events/${eventId}/users/${userId}`),
 
   // Get event users
-  getEventUsers: async (eventId: string): Promise<ResponseUserEvent[]> => {
-    return await client.get<ResponseUserEvent[]>(`/events/${eventId}/users`);
-  },
+  getEventUsers: async (eventId: string): Promise<ResponseUserEvent[]> => await client.get<ResponseUserEvent[]>(`/events/${eventId}/users`),
 };

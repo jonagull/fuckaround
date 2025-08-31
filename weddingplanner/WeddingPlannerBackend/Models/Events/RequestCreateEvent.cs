@@ -26,7 +26,7 @@ public class RequestAddress
   [Required]
   public string City { get; set; } = string.Empty;
 
-  public string? State { get; set; }
+  public string State { get; set; } = string.Empty;
 
   [Required]
   public string Zip { get; set; } = string.Empty;

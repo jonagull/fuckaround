@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { eventApi } from "../api";
-import { type IRequestCreateEvent } from "../types";
+import { Event, type IRequestCreateEvent } from "../types";
+import { RequestUpdateEvent } from "../types/requests/updateEvent";
 
 
 export const useCreateEvent = () => {
@@ -39,3 +40,14 @@ export const useGetEvent = (id: string) => useQuery({
   queryKey: ["event", id],
   queryFn: () => eventApi.getEvent(id),
 });
+
+
+
+export const useUpdateEvent = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, event }: { id: Event["id"]; event: RequestUpdateEvent }) => eventApi.updateEvent(id, event),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["events"] }),
+    onError: (error) => console.error(error)
+  });
+};
