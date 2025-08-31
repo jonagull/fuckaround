@@ -297,23 +297,24 @@ public class GuestInvitationController : ControllerBase
     }
 
     [HttpPost("bulk-from-csv")]
-    public async Task<ActionResult<List<ResponseGuestInvitation>>> BulkCreateInvitationsFromCsv([FromForm] Guid eventId, [FromForm] IFormFile csvFile)
+    [Consumes("multipart/form-data")]
+    public async Task<ActionResult<List<ResponseGuestInvitation>>> BulkCreateInvitationsFromCsv([FromForm] BulkCreateFromCsvRequest request)
     {
         try
         {
-            if (csvFile == null || csvFile.Length == 0)
+            if (request.CsvFile == null || request.CsvFile.Length == 0)
             {
                 return BadRequest(new { message = "CSV file is required" });
             }
 
-            if (!csvFile.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+            if (!request.CsvFile.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
             {
                 return BadRequest(new { message = "File must be a CSV file" });
             }
 
-            var requests = new List<RequestCreateGuestInvitation>();
+            var invitationRequests = new List<RequestCreateGuestInvitation>();
 
-            using var reader = new StreamReader(csvFile.OpenReadStream(), Encoding.UTF8);
+            using var reader = new StreamReader(request.CsvFile.OpenReadStream(), Encoding.UTF8);
             var isFirstLine = true;
 
             while (!reader.EndOfStream)
@@ -331,9 +332,9 @@ public class GuestInvitationController : ControllerBase
                 var columns = ParseCsvLine(line);
                 if (columns.Length >= 5) // Minimum required columns
                 {
-                    var request = new RequestCreateGuestInvitation
+                    var invitationRequest = new RequestCreateGuestInvitation
                     {
-                        EventId = eventId,
+                        EventId = request.EventId,
                         GuestInfo = new GuestInfo
                         {
                             FirstName = columns[0].Trim(),
@@ -345,12 +346,12 @@ public class GuestInvitationController : ControllerBase
                         AdditionalGuestsCount = columns.Length > 5 && int.TryParse(columns[5].Trim(), out var additional) ? additional : 0
                     };
 
-                    requests.Add(request);
+                    invitationRequests.Add(invitationRequest);
                 }
             }
 
             var userId = GetUserId();
-            var result = await _guestInvitationService.BulkCreateInvitationsAsync(userId, requests);
+            var result = await _guestInvitationService.BulkCreateInvitationsAsync(userId, invitationRequests);
             return Ok(result);
         }
         catch (UnauthorizedAccessException ex)

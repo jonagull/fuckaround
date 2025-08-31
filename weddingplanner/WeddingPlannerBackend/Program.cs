@@ -2,16 +2,21 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using WeddingPlannerBackend.Authentication;
 using WeddingPlannerBackend.Data;
 using WeddingPlannerBackend.Services;
+using WeddingPlannerBackend.Swagger;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.OperationFilter<FileUploadOperationFilter>();
+});
 
 // Add DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
