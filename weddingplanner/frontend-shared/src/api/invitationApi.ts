@@ -52,7 +52,7 @@ export const invitationApi = {
   },
 
   getInvitations: async (eventId: string): Promise<ResponseInvitation[]> => {
-    return invitationApi.getEventInvitations(eventId);
+    return await client.get<ResponseInvitation[]>(`/guest-invitations/event/${eventId}`);
   },
 
   updateInvitation: async (invitationId: string, data: IRequestUpdateInvitation): Promise<Invitation> => {
@@ -60,6 +60,6 @@ export const invitationApi = {
   },
 
   deleteInvitation: async (invitationId: string): Promise<void> => {
-    return invitationApi.cancelInvitation(invitationId);
+    await client.delete(`/guest-invitations/${invitationId}`);
   },
 };

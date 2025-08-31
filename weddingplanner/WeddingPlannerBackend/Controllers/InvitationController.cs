@@ -98,7 +98,7 @@ public class InvitationController : ControllerBase
   }
 
   [HttpGet]
-  public async Task<ActionResult<List<ResponseInvitation>>> GetMyInvitations()
+  public async Task<ActionResult<ResponseListPlannerInvitations>> GetMyInvitations()
   {
     try
     {

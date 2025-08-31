@@ -143,17 +143,31 @@ public class InvitationService : IInvitationService
     return MapToResponseInvitation(invitation);
   }
 
-  public async Task<List<ResponseInvitation>> GetUserInvitationsAsync(Guid userId)
+  public async Task<ResponseListPlannerInvitations> GetUserInvitationsAsync(Guid userId)
   {
-    var invitations = await _context.PlannerInvitations
+    var sentInvitations = await _context.PlannerInvitations
         .Include(i => i.Event)
+            .ThenInclude(e => e.VenueAddress)
         .Include(i => i.Sender)
         .Include(i => i.Receiver)
-        .Where(i => i.ReceiverId == userId)
+        .Where(i => i.SenderId == userId && i.Status == InvitationStatus.PENDING)
         .OrderByDescending(i => i.CreatedAt)
         .ToListAsync();
 
-    return invitations.Select(MapToResponseInvitation).ToList();
+    var receivedInvitations = await _context.PlannerInvitations
+        .Include(i => i.Event)
+            .ThenInclude(e => e.VenueAddress)
+        .Include(i => i.Sender)
+        .Include(i => i.Receiver)
+        .Where(i => i.ReceiverId == userId && i.Status == InvitationStatus.PENDING)
+        .OrderByDescending(i => i.CreatedAt)
+        .ToListAsync();
+
+    return new ResponseListPlannerInvitations
+    {
+        Sent = sentInvitations.Select(MapToResponseInvitationWithRelations).ToList(),
+        Received = receivedInvitations.Select(MapToResponseInvitationWithRelations).ToList()
+    };
   }
 
   public async Task<List<ResponseInvitation>> GetEventInvitationsAsync(Guid eventId, Guid userId)
@@ -213,6 +227,40 @@ public class InvitationService : IInvitationService
       ReceiverEmail = invitation.Receiver.Email,
       Role = invitation.Role,
       Status = invitation.Status,
+      Message = invitation.Message,
+      ExpiresAt = invitation.ExpiresAt,
+      CreatedAt = invitation.CreatedAt
+    };
+  }
+
+  private ResponseInvitationWithRelations MapToResponseInvitationWithRelations(PlannerInvitation invitation)
+  {
+    return new ResponseInvitationWithRelations
+    {
+      Id = invitation.Id.ToString(),
+      EventId = invitation.EventId.ToString(),
+      Event = new EventInfo
+      {
+        Id = invitation.Event.Id.ToString(),
+        EventName = invitation.Event.EventName,
+        EventDate = invitation.Event.EventDate,
+        Location = invitation.Event.VenueAddress?.Street,
+        Description = invitation.Event.EventDescription
+      },
+      Sender = new UserInfo
+      {
+        Id = invitation.Sender.Id.ToString(),
+        Name = invitation.Sender.Name,
+        Email = invitation.Sender.Email
+      },
+      Receiver = new UserInfo
+      {
+        Id = invitation.Receiver.Id.ToString(),
+        Name = invitation.Receiver.Name,
+        Email = invitation.Receiver.Email
+      },
+      Role = invitation.Role.ToString(),
+      Status = invitation.Status.ToString(),
       Message = invitation.Message,
       ExpiresAt = invitation.ExpiresAt,
       CreatedAt = invitation.CreatedAt

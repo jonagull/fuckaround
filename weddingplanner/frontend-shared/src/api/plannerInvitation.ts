@@ -10,7 +10,7 @@ const client = new ApiClient();
 
 export const plannerInvitationApi = {
   send: async (data: IRequestSendPlannerInvitation): Promise<IResponseSendPlannerInvitation> => {
-    return await client.post<IResponseSendPlannerInvitation, IRequestSendPlannerInvitation>("/invitations/send", data);
+    return await client.post<IResponseSendPlannerInvitation, IRequestSendPlannerInvitation>(`/invitations/event/${data.eventId}`, data);
   },
 
   list: async (): Promise<IResponseListPlannerInvitations> => {

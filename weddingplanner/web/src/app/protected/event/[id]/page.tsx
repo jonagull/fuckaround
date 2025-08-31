@@ -12,7 +12,7 @@ import Link from "next/link";
 import { SendInvitationModal } from "@/components/SendInvitationModal";
 import { InvitationForm } from "@/components/invitations/InvitationForm";
 import { useCurrentUser } from "@/components/CurrentUserContext";
-// import { InvitationList } from "@/components/invitations/InvitationList"; // TODO: Implement guest invitations
+import { InvitationList } from "@/components/invitations/InvitationList";
 
 export default function Event() {
   const { id } = useParams();
@@ -468,18 +468,14 @@ export default function Event() {
                 onSuccess={() => setShowInvitationForm(false)}
               />
             ) : (
-              <>
-                {/* <InvitationList eventId={id as string} /> */}
-                <p className="text-gray-500">Guest invitations coming soon...</p>
-              </>
+              <InvitationList eventId={id as string} />
             )}
           </div>
 
           <div>
             {showInvitationForm && (
               <div className="mt-11">
-                {/* <InvitationList eventId={id as string} /> */}
-                <p className="text-gray-500">Guest invitations coming soon...</p>
+                <InvitationList eventId={id as string} />
               </div>
             )}
           </div>
