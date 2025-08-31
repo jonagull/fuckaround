@@ -35,7 +35,7 @@ const guests = [
   },
 ];
 
-export default function ProjectGuestsPage() {
+export default function ProjectGuestsPage({ params }: { params: { id: string } }) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -46,7 +46,7 @@ export default function ProjectGuestsPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <CsvImportModal projectId={params.id} />
+          <CsvImportModal projectId={params?.id} />
           <Button className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600">
             <Plus className="mr-2 h-4 w-4" />
             Add Guest
