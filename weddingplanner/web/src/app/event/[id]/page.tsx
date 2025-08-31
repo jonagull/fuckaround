@@ -179,16 +179,16 @@ export default function Event() {
             <Card className="border-0 shadow-lg bg-gradient-to-br from-rose-50 to-pink-50 dark:from-gray-800 dark:to-gray-700">
               <CardHeader className="pb-4">
                 <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-rose-100 dark:bg-rose-900 rounded-full flex items-center justify-center">
+                  {/* <div className="w-12 h-12 bg-rose-100 dark:bg-rose-900 rounded-full flex items-center justify-center">
                     <Heart className="h-6 w-6 text-rose-600 dark:text-rose-400" />
-                  </div>
+                  </div> */}
                   <div>
                     <CardTitle className="text-2xl text-gray-900 dark:text-white">
-                      {event.eventName}
+                      Details
                     </CardTitle>
-                    <CardDescription className="text-base">
+                    {/* <CardDescription className="text-base">
                       {event.eventDescription || "No description provided"}
-                    </CardDescription>
+                    </CardDescription> */}
                   </div>
                 </div>
               </CardHeader>

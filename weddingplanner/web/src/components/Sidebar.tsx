@@ -18,7 +18,8 @@ import {
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import { useLogout } from "weddingplanner-shared";
+import { useLogout, useGetEvent } from "weddingplanner-shared";
+import type { Event } from "weddingplanner-shared";
 
 const getNavigation = (projectId?: string) => [
   {
@@ -50,13 +51,24 @@ const getNavigation = (projectId?: string) => [
 
 interface SidebarProps {
   className?: string;
+  event?: Event;
 }
 
-export function Sidebar({ className }: SidebarProps) {
+export function Sidebar({ className, event }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const { mutate: logout } = useLogout();
+
+  // Extract event ID from pathname if we're in an event context
+  const eventId = pathname.split("/")[2];
+  const isEventContext = eventId && pathname.startsWith("/event/");
+
+  // Fetch event data if we're in an event context and no event was passed as prop
+  const { data: fetchedEvent } = useGetEvent(isEventContext ? eventId : "");
+
+  // Use passed event prop or fetched event data
+  const currentEvent = event || fetchedEvent;
 
   const handleLogout = () => {
     logout();
@@ -98,74 +110,87 @@ export function Sidebar({ className }: SidebarProps) {
         <div className="flex-1 w-full overflow-y-auto">
           <div className="space-y-2 p-2">
             {/* Project Info */}
-            <div className="p-2 bg-rose-50 dark:bg-rose-900/20 rounded-lg">
-              {!isCollapsed && (
-                <>
-                  <p className="text-xs font-medium text-rose-700 dark:text-rose-300 mb-1">
-                    Current Project
-                  </p>
-                  <p className="text-xs text-rose-600 dark:text-rose-400">
-                    Sarah & John&apos;s Wedding
-                  </p>
-                </>
-              )}
-            </div>
+            {isEventContext && (
+              <div className="p-2 bg-rose-50 dark:bg-rose-900/20 rounded-lg">
+                {!isCollapsed ? (
+                  <>
+                    <p className="text-xs font-medium text-rose-700 dark:text-rose-300 mb-1">
+                      Current Project
+                    </p>
+                    <p className="text-xs text-rose-600 dark:text-rose-400">
+                      {currentEvent?.eventName || "Loading..."}
+                    </p>
+                  </>
+                ) : (
+                  <div className="flex items-center justify-center">
+                    <Heart className="h-5 w-5 text-rose-600 dark:text-rose-400" />
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Divider */}
+            {isEventContext && <div className="w-full h-px bg-border" />}
 
             {/* Back to Projects */}
-            <div className="space-y-1">
-              <Link href="/">
-                <Button
-                  variant="outline"
-                  size={isCollapsed ? "icon" : "default"}
-                  className={cn("w-full", isCollapsed ? "h-8 w-8" : "justify-start")}
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                  {!isCollapsed && <span className="ml-2">All Projects</span>}
-                </Button>
-              </Link>
-              <Link href="/protected/invitations">
-                <Button
-                  variant="outline"
-                  size={isCollapsed ? "icon" : "default"}
-                  className={cn("w-full", isCollapsed ? "h-8 w-8" : "justify-start")}
-                >
-                  <Bell className="h-4 w-4" />
-                  {!isCollapsed && <span className="ml-2">Invitations</span>}
-                </Button>
-              </Link>
-            </div>
+            {isEventContext && (
+              <div className="space-y-1">
+                <Link href="/">
+                  <Button
+                    variant="outline"
+                    size={isCollapsed ? "icon" : "default"}
+                    className={cn("w-full", isCollapsed ? "h-8 w-8" : "justify-start")}
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    {!isCollapsed && <span className="ml-2">All Projects</span>}
+                  </Button>
+                </Link>
+                <Link href="/protected/invitations">
+                  <Button
+                    variant="outline"
+                    size={isCollapsed ? "icon" : "default"}
+                    className={cn("w-full", isCollapsed ? "h-8 w-8" : "justify-start")}
+                  >
+                    <Bell className="h-4 w-4" />
+                    {!isCollapsed && <span className="ml-2">Invitations</span>}
+                  </Button>
+                </Link>
+              </div>
+            )}
 
             {/* Divider */}
-            <div className="w-full h-px bg-border" />
+            {isEventContext && <div className="w-full h-px bg-border" />}
 
             {/* Navigation */}
-            <div className="space-y-1">
-              {navigation.map((item) => {
-                const isActive = pathname === item.href;
-                return (
-                  <Link key={item.name} href={item.href}>
-                    <Button
-                      variant={isActive ? "secondary" : "ghost"}
-                      size={isCollapsed ? "icon" : "default"}
-                      className={cn(
-                        "w-full",
-                        isCollapsed ? "h-8 w-8" : "justify-start",
-                        isActive && "bg-rose-50 text-rose-700 hover:bg-rose-100"
-                      )}
-                    >
-                      <item.icon className="h-4 w-4" />
-                      {!isCollapsed && <span className="ml-2">{item.name}</span>}
-                    </Button>
-                  </Link>
-                );
-              })}
-            </div>
+            {isEventContext && (
+              <div className="space-y-1">
+                {navigation.map((item) => {
+                  const isActive = pathname === item.href;
+                  return (
+                    <Link key={item.name} href={item.href}>
+                      <Button
+                        variant={isActive ? "secondary" : "ghost"}
+                        size={isCollapsed ? "icon" : "default"}
+                        className={cn(
+                          "w-full",
+                          isCollapsed ? "h-8 w-8" : "justify-start",
+                          isActive && "bg-rose-50 text-rose-700 hover:bg-rose-100"
+                        )}
+                      >
+                        <item.icon className="h-4 w-4" />
+                        {!isCollapsed && <span className="ml-2">{item.name}</span>}
+                      </Button>
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
 
             {/* Divider */}
-            <div className="w-full h-px bg-border" />
+            {isEventContext && <div className="w-full h-px bg-border" />}
 
             {/* Project Progress */}
-            {!isCollapsed && (
+            {isEventContext && !isCollapsed && (
               <div className="p-2">
                 <h2 className="mb-2 text-xs font-semibold text-gray-600 dark:text-gray-400">
                   Project Progress
@@ -183,12 +208,15 @@ export function Sidebar({ className }: SidebarProps) {
                       style={{ width: "75%" }}
                     ></div>
                   </div>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                  <p className="text-xs text-gray-700 dark:text-gray-400 mt-1">
                     On track for June 15th
                   </p>
                 </div>
               </div>
             )}
+
+            {/* Divider */}
+            {isEventContext && <div className="w-full h-px bg-border" />}
           </div>
         </div>
 
