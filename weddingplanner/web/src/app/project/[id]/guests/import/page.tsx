@@ -126,7 +126,7 @@ export default function CsvImportPage({ params }: { params: { id: string } }) {
   };
 
   const handleBulkSendInvitations = async () => {
-    if (parsedGuests.length === 0) return;
+    if (parsedGuests.length === 0 || isSendingInvitations) return;
 
     setIsSendingInvitations(true);
     setError(null);
@@ -152,13 +152,13 @@ export default function CsvImportPage({ params }: { params: { id: string } }) {
       setSuccess(true);
       setError(null);
 
-      // Navigate back to guests page after a short delay
+      // Add a longer delay to show success and prevent multiple submissions
       setTimeout(() => {
         router.push(`/project/${projectId}/guests`);
-      }, 2000);
+      }, 3000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to send invitations");
-    } finally {
+      // Reset loading state on error
       setIsSendingInvitations(false);
     }
   };
@@ -529,12 +529,12 @@ David,Brown,david.brown@email.com,3335557777,+1,1`;
               <Button
                 onClick={handleBulkSendInvitations}
                 disabled={isSendingInvitations}
-                className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white border-0 px-8 py-2"
+                className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white border-0 px-8 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSendingInvitations ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Sending Invitations...
+                    Processing Invitations...
                   </>
                 ) : (
                   <>
@@ -543,6 +543,11 @@ David,Brown,david.brown@email.com,3335557777,+1,1`;
                   </>
                 )}
               </Button>
+              {isSendingInvitations && (
+                <div className="flex items-center text-sm text-gray-600">
+                  <div className="animate-pulse">Please wait, this may take a moment...</div>
+                </div>
+              )}
             </div>
           </div>
         )}
