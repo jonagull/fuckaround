@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Users, Search, Plus, Mail, Phone } from "lucide-react";
+import { CsvImportModal } from "@/components/guests/CsvImportModal";
 
 const guests = [
   {
@@ -44,10 +45,13 @@ export default function ProjectGuestsPage() {
             Manage guests for Sarah & John&apos;s Wedding and track RSVPs
           </p>
         </div>
-        <Button className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600">
-          <Plus className="mr-2 h-4 w-4" />
-          Add Guest
-        </Button>
+        <div className="flex items-center gap-3">
+          <CsvImportModal projectId={params.id} />
+          <Button className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600">
+            <Plus className="mr-2 h-4 w-4" />
+            Add Guest
+          </Button>
+        </div>
       </div>
 
       {/* Stats */}
@@ -118,8 +122,8 @@ export default function ProjectGuestsPage() {
                       guest.status === "Confirmed"
                         ? "bg-green-100 text-green-700"
                         : guest.status === "Pending"
-                          ? "bg-yellow-100 text-yellow-700"
-                          : "bg-red-100 text-red-700"
+                        ? "bg-yellow-100 text-yellow-700"
+                        : "bg-red-100 text-red-700"
                     }
                   >
                     {guest.status}

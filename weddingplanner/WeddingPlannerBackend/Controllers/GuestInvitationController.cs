@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WeddingPlannerBackend.Models.GuestInvitations;
 using WeddingPlannerBackend.Services;
+using System.Globalization;
+using System.Text;
 
 namespace WeddingPlannerBackend.Controllers;
 
@@ -178,5 +180,92 @@ public class GuestInvitationController : ControllerBase
         {
             return BadRequest(new { message = ex.Message });
         }
+
+    }
+
+    [HttpPost("parse-csv")]
+    public async Task<ActionResult<List<CsvGuestInfo>>> ParseCsvGuests([FromForm] RequestParseCsvGuests request)
+    {
+        try
+        {
+            if (request.CsvFile == null || request.CsvFile.Length == 0)
+            {
+                return BadRequest(new { message = "CSV file is required" });
+            }
+
+            if (!request.CsvFile.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest(new { message = "File must be a CSV file" });
+            }
+
+            var guests = new List<CsvGuestInfo>();
+
+            using var reader = new StreamReader(request.CsvFile.OpenReadStream(), Encoding.UTF8);
+            var isFirstLine = true;
+
+            while (!reader.EndOfStream)
+            {
+                var line = await reader.ReadLineAsync();
+                if (string.IsNullOrWhiteSpace(line)) continue;
+
+                // Skip header row
+                if (isFirstLine)
+                {
+                    isFirstLine = false;
+                    continue;
+                }
+
+                var columns = ParseCsvLine(line);
+                if (columns.Length >= 5) // Minimum required columns
+                {
+                    var guest = new CsvGuestInfo
+                    {
+                        FirstName = columns[0].Trim(),
+                        LastName = columns[1].Trim(),
+                        Email = columns[2].Trim(),
+                        PhoneNumber = columns[3].Trim(),
+                        PhoneCountryCode = columns[4].Trim(),
+                        AdditionalGuestsCount = columns.Length > 5 && int.TryParse(columns[5].Trim(), out var additional) ? additional : 0
+                    };
+
+                    guests.Add(guest);
+                }
+            }
+
+            return Ok(guests);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = $"Error parsing CSV file: {ex.Message}" });
+        }
+    }
+
+    private string[] ParseCsvLine(string line)
+    {
+        var result = new List<string>();
+        var current = new StringBuilder();
+        var inQuotes = false;
+
+        for (int i = 0; i < line.Length; i++)
+        {
+            var ch = line[i];
+
+            if (ch == '"')
+            {
+                inQuotes = !inQuotes;
+            }
+            else if (ch == ',' && !inQuotes)
+            {
+                result.Add(current.ToString());
+                current.Clear();
+            }
+            else
+            {
+                current.Append(ch);
+            }
+        }
+
+        result.Add(current.ToString());
+        return result.ToArray();
     }
 }

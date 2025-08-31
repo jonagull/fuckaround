@@ -5,13 +5,15 @@ import {
   type IRequestUpdateInvitation,
   type GuestInvitation,
   type SendInvitationsResponse,
-  type AdditionalGuestInput
+  type AdditionalGuestInput,
+  IRequestParseCsvGuests,
 } from "../types";
 
 export const useCreateInvitation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (invitation: IRequestCreateInvitation) => invitationApi.createInvitation(invitation),
+    mutationFn: (invitation: IRequestCreateInvitation) =>
+      invitationApi.createInvitation(invitation),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["invitations", variables.eventId] });
     },
@@ -21,17 +23,23 @@ export const useCreateInvitation = () => {
   });
 };
 
-export const useGetInvitations = (eventId: string) => useQuery<GuestInvitation[], Error>({
-  queryKey: ["invitations", eventId],
-  queryFn: () => invitationApi.getInvitations(eventId),
-  enabled: !!eventId,
-});
+export const useGetInvitations = (eventId: string) =>
+  useQuery<GuestInvitation[], Error>({
+    queryKey: ["invitations", eventId],
+    queryFn: () => invitationApi.getInvitations(eventId),
+    enabled: !!eventId,
+  });
 
 export const useUpdateInvitation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ invitationId, data }: { invitationId: string; data: IRequestUpdateInvitation }) =>
-      invitationApi.updateInvitation(invitationId, data),
+    mutationFn: ({
+      invitationId,
+      data,
+    }: {
+      invitationId: string;
+      data: IRequestUpdateInvitation;
+    }) => invitationApi.updateInvitation(invitationId, data),
     onSuccess: (updatedInvitation) => {
       queryClient.invalidateQueries({ queryKey: ["invitations", updatedInvitation.eventId] });
     },
@@ -58,8 +66,7 @@ export const useDeleteInvitation = () => {
 export const useSendGuestInvitations = () => {
   const queryClient = useQueryClient();
   return useMutation<SendInvitationsResponse, Error, { invitationIds: string[]; eventId: string }>({
-    mutationFn: ({ invitationIds }) =>
-      invitationApi.sendGuestInvitations(invitationIds),
+    mutationFn: ({ invitationIds }) => invitationApi.sendGuestInvitations(invitationIds),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["invitations", variables.eventId] });
     },
@@ -69,16 +76,21 @@ export const useSendGuestInvitations = () => {
   });
 };
 
-export const useGetGuestInvitation = (invitationId: string) => useQuery<GuestInvitation, Error>({
-  queryKey: ["guest-invitation", invitationId],
-  queryFn: () => invitationApi.getGuestInvitation(invitationId),
-  enabled: !!invitationId,
-  retry: false,
-});
+export const useGetGuestInvitation = (invitationId: string) =>
+  useQuery<GuestInvitation, Error>({
+    queryKey: ["guest-invitation", invitationId],
+    queryFn: () => invitationApi.getGuestInvitation(invitationId),
+    enabled: !!invitationId,
+    retry: false,
+  });
 
 export const useAcceptGuestInvitation = () => {
   const queryClient = useQueryClient();
-  return useMutation<GuestInvitation, Error, { invitationId: string; additionalGuests?: AdditionalGuestInput[] }>({
+  return useMutation<
+    GuestInvitation,
+    Error,
+    { invitationId: string; additionalGuests?: AdditionalGuestInput[] }
+  >({
     mutationFn: ({ invitationId, additionalGuests }) =>
       invitationApi.acceptGuestInvitation(invitationId, additionalGuests),
     onSuccess: (_, variables) => {
@@ -93,6 +105,15 @@ export const useDeclineGuestInvitation = () => {
     mutationFn: (invitationId) => invitationApi.declineGuestInvitation(invitationId),
     onSuccess: (_, invitationId) => {
       queryClient.invalidateQueries({ queryKey: ["guest-invitation", invitationId] });
+    },
+  });
+};
+
+export const useParseCsvGuests = () => {
+  return useMutation({
+    mutationFn: (data: IRequestParseCsvGuests) => invitationApi.parseCsvGuests(data),
+    onError: (error) => {
+      console.error("Error parsing CSV guests:", error);
     },
   });
 };
