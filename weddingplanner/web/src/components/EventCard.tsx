@@ -16,7 +16,6 @@ export function EventCard({ event }: { event: Event }) {
     setIsDeleteDialogOpen(false);
   };
 
-  // re_ZqAXZMHj_QDMyr4PzuySJcCvSbdN1VEtw
 
   return (
     <Card className="p-6 hover:shadow-lg transition-all duration-200 group relative">
