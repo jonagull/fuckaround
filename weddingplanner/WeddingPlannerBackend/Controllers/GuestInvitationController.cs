@@ -54,7 +54,7 @@ public class GuestInvitationController : ControllerBase
     }
 
     [HttpPost("bulk")]
-    public async Task<ActionResult<List<ResponseGuestInvitation>>> BulkCreateInvitations([FromBody] List<RequestCreateGuestInvitation> requests)
+    public async Task<ActionResult<ResponseBulkCreateInvitations>> BulkCreateInvitations([FromBody] List<RequestCreateGuestInvitation> requests)
     {
         try
         {
@@ -298,7 +298,7 @@ public class GuestInvitationController : ControllerBase
 
     [HttpPost("bulk-from-csv")]
     [Consumes("multipart/form-data")]
-    public async Task<ActionResult<List<ResponseGuestInvitation>>> BulkCreateInvitationsFromCsv([FromForm] BulkCreateFromCsvRequest request)
+    public async Task<ActionResult<ResponseBulkCreateInvitations>> BulkCreateInvitationsFromCsv([FromForm] BulkCreateFromCsvRequest request)
     {
         try
         {

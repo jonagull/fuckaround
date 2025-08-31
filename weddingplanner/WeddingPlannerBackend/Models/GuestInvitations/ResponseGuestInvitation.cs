@@ -21,10 +21,10 @@ public class ResponseGuestInvitation
     public List<AdditionalGuest> AdditionalGuests { get; set; } = new();
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
-    
-    public string Status 
-    { 
-        get 
+
+    public string Status
+    {
+        get
         {
             if (AcceptedAt.HasValue) return "ACCEPTED";
             if (RejectedAt.HasValue) return "REJECTED";

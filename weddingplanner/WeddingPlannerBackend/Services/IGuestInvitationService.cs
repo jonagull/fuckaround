@@ -5,7 +5,7 @@ namespace WeddingPlannerBackend.Services;
 public interface IGuestInvitationService
 {
     Task<ResponseGuestInvitation> CreateInvitationAsync(Guid userId, RequestCreateGuestInvitation request);
-    Task<List<ResponseGuestInvitation>> BulkCreateInvitationsAsync(Guid userId, List<RequestCreateGuestInvitation> requests);
+    Task<ResponseBulkCreateInvitations> BulkCreateInvitationsAsync(Guid userId, List<RequestCreateGuestInvitation> requests);
     Task<List<ResponseGuestInvitation>> GetEventInvitationsAsync(Guid eventId, Guid userId);
     Task<ResponseGuestInvitation> UpdateInvitationAsync(Guid invitationId, Guid userId, RequestUpdateGuestInvitation request);
     Task DeleteInvitationAsync(Guid invitationId, Guid userId);

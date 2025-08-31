@@ -64,7 +64,7 @@ public class GuestInvitationService : IGuestInvitationService
     return MapToResponse(invitation, eventEntity);
   }
 
-  public async Task<List<ResponseGuestInvitation>> BulkCreateInvitationsAsync(Guid userId, List<RequestCreateGuestInvitation> requests)
+  public async Task<ResponseBulkCreateInvitations> BulkCreateInvitationsAsync(Guid userId, List<RequestCreateGuestInvitation> requests)
   {
     if (!requests.Any())
       throw new ArgumentException("No invitations provided");
@@ -99,28 +99,52 @@ public class GuestInvitationService : IGuestInvitationService
         .Select(i => i.GuestEmail.ToLower())
         .ToListAsync();
 
-    var results = new List<ResponseGuestInvitation>();
+    var response = new ResponseBulkCreateInvitations
+    {
+      TotalRequested = requests.Count
+    };
     var invitationsToAdd = new List<Invitation>();
 
     foreach (var request in requests)
     {
       try
       {
+        // Validate request
+        if (request.GuestInfo == null || string.IsNullOrWhiteSpace(request.GuestInfo.Email))
+        {
+          response.Errors.Add(new BulkInvitationError
+          {
+            Email = request.GuestInfo?.Email ?? "",
+            FirstName = request.GuestInfo?.FirstName ?? "",
+            LastName = request.GuestInfo?.LastName ?? "",
+            ErrorType = "VALIDATION",
+            ErrorMessage = "Email address is required"
+          });
+          continue;
+        }
+
         // Check if invitation already exists for this email
         if (existingEmails.Contains(request.GuestInfo.Email.ToLower()))
         {
-          // Skip duplicates - don't add to results, just continue
+          response.Errors.Add(new BulkInvitationError
+          {
+            Email = request.GuestInfo.Email ?? "",
+            FirstName = request.GuestInfo.FirstName ?? "",
+            LastName = request.GuestInfo.LastName ?? "",
+            ErrorType = "DUPLICATE",
+            ErrorMessage = $"An invitation already exists for {request.GuestInfo.Email}"
+          });
           continue;
         }
 
         var invitation = new Invitation
         {
           EventId = request.EventId,
-          GuestFirstName = request.GuestInfo.FirstName,
-          GuestLastName = request.GuestInfo.LastName,
-          GuestEmail = request.GuestInfo.Email,
-          GuestPhoneNumber = request.GuestInfo.PhoneNumber,
-          GuestPhoneCountryCode = request.GuestInfo.PhoneCountryCode,
+          GuestFirstName = request.GuestInfo.FirstName ?? "",
+          GuestLastName = request.GuestInfo.LastName ?? "",
+          GuestEmail = request.GuestInfo.Email ?? "",
+          GuestPhoneNumber = request.GuestInfo.PhoneNumber ?? "",
+          GuestPhoneCountryCode = request.GuestInfo.PhoneCountryCode ?? "",
           AdditionalGuestsCount = request.AdditionalGuestsCount,
           AdditionalGuests = "[]", // Empty JSON array
           InvitedAt = DateTime.UtcNow
@@ -128,12 +152,18 @@ public class GuestInvitationService : IGuestInvitationService
 
         invitationsToAdd.Add(invitation);
         // Add to existing emails to prevent duplicates within the same bulk request
-        existingEmails.Add(request.GuestInfo.Email.ToLower());
+        existingEmails.Add((request.GuestInfo.Email ?? "").ToLower());
       }
-      catch (Exception)
+      catch (Exception ex)
       {
-        // Skip invalid requests - just continue to next one
-        continue;
+        response.Errors.Add(new BulkInvitationError
+        {
+          Email = request.GuestInfo?.Email ?? "",
+          FirstName = request.GuestInfo?.FirstName ?? "",
+          LastName = request.GuestInfo?.LastName ?? "",
+          ErrorType = "OTHER",
+          ErrorMessage = $"Unexpected error: {ex.Message}"
+        });
       }
     }
 
@@ -146,11 +176,14 @@ public class GuestInvitationService : IGuestInvitationService
       // Map all successfully created invitations to response objects
       foreach (var invitation in invitationsToAdd)
       {
-        results.Add(MapToResponse(invitation, eventEntity));
+        response.SuccessfulInvitations.Add(MapToResponse(invitation, eventEntity));
       }
     }
 
-    return results;
+    response.SuccessCount = response.SuccessfulInvitations.Count;
+    response.ErrorCount = response.Errors.Count;
+
+    return response;
   }
 
   public async Task<List<ResponseGuestInvitation>> GetEventInvitationsAsync(Guid eventId, Guid userId)
@@ -355,7 +388,7 @@ public class GuestInvitationService : IGuestInvitationService
           // Update invitation with email sent timestamp
           invitation.EmailSentAt = DateTime.UtcNow;
           invitation.UpdatedAt = DateTime.UtcNow;
-          
+
           result.Success = true;
           response.SuccessfullySent++;
         }
@@ -407,15 +440,17 @@ public class GuestInvitationService : IGuestInvitationService
     if (request.AdditionalGuests != null && request.AdditionalGuests.Any())
     {
       var additionalGuestsList = request.AdditionalGuests
-          .Select(g => {
-              var parts = g.Name.Split(' ', 2);
-              return new AdditionalGuest { 
-                  FirstName = parts.Length > 0 ? parts[0] : "",
-                  LastName = parts.Length > 1 ? parts[1] : ""
-              };
+          .Select(g =>
+          {
+            var parts = g.Name.Split(' ', 2);
+            return new AdditionalGuest
+            {
+              FirstName = parts.Length > 0 ? parts[0] : "",
+              LastName = parts.Length > 1 ? parts[1] : ""
+            };
           })
           .ToList();
-      
+
       invitation.AdditionalGuests = JsonSerializer.Serialize(additionalGuestsList);
       invitation.AdditionalGuestsCount = additionalGuestsList.Count();
     }
@@ -445,7 +480,7 @@ public class GuestInvitationService : IGuestInvitationService
     invitation.RejectedAt = DateTime.UtcNow;
     invitation.AcceptedAt = null; // Clear any previous acceptance
     invitation.UpdatedAt = DateTime.UtcNow;
-    
+
     // Clear additional guests if any
     invitation.AdditionalGuests = "[]";
     invitation.AdditionalGuestsCount = 0;
@@ -458,7 +493,7 @@ public class GuestInvitationService : IGuestInvitationService
   private ResponseGuestInvitation MapToResponse(Invitation invitation)
   {
     var additionalGuests = new List<AdditionalGuest>();
-    
+
     if (!string.IsNullOrEmpty(invitation.AdditionalGuests))
     {
       try
