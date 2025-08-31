@@ -12,7 +12,7 @@ export function CsvImportModal({ projectId }: CsvImportModalProps) {
   const router = useRouter();
 
   const handleNavigateToImport = () => {
-    router.push(`/project/${projectId}/guests/import`);
+    router.push(`/event/${projectId}/guests/import`);
   };
 
   return (

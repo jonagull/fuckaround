@@ -18,7 +18,7 @@ import {
   MoreHorizontal,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import { useState, use } from "react";
 import { useBulkCreateInvitations, useParseCsvGuests } from "weddingplanner-shared";
 import { useRouter } from "next/navigation";
 import {
@@ -48,9 +48,9 @@ interface CsvGuest {
   additionalGuestsCount: number;
 }
 
-export default function CsvImportPage({ params }: { params: { id: string } }) {
+export default function CsvImportPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
-  const projectId = params.id;
+  const { id: projectId } = use(params);
 
   const [file, setFile] = useState<File | null>(null);
   const [parsedGuests, setParsedGuests] = useState<CsvGuest[]>([]);

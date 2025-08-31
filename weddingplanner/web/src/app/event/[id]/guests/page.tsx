@@ -266,58 +266,71 @@ export default function ProjectGuestsPage({ params }: { params: Promise<{ id: st
         </Card>
       </div>
 
-      {/* Search, Sort, and View Toggle */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <div className="relative max-w-sm">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <Input
-              placeholder="Search guests..."
-              className="pl-10"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
+      {/* Controls Section */}
+      <div className="space-y-4">
+        {/* Search Bar */}
+        <div className="relative max-w-md">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+          <Input
+            placeholder="Search guests by name or email..."
+            className="pl-10"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
 
-          <div className="flex items-center space-x-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">Sort by:</span>
+        {/* Sort and View Controls */}
+        <div className="flex flex-wrap items-center gap-4">
+          {/* Sorting Controls */}
+          <div className="flex items-center space-x-3">
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Sort by:</span>
             <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
-              <SelectTrigger className="w-32">
+              <SelectTrigger className="w-36">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="status">Status</SelectItem>
-                <SelectItem value="name">Name</SelectItem>
-                <SelectItem value="email">Email</SelectItem>
+                <SelectItem value="status">Status (Pending first)</SelectItem>
+                <SelectItem value="name">Name (A-Z)</SelectItem>
+                <SelectItem value="email">Email (A-Z)</SelectItem>
                 <SelectItem value="date">Date Sent</SelectItem>
               </SelectContent>
             </Select>
-            <Button variant="outline" size="sm" onClick={toggleSortOrder} className="px-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={toggleSortOrder}
+              className="px-3"
+              title={`Sort ${sortOrder === "asc" ? "descending" : "ascending"}`}
+            >
               <ArrowUpDown className="h-4 w-4" />
+              <span className="ml-1 text-xs">{sortOrder === "asc" ? "↑" : "↓"}</span>
             </Button>
           </div>
-        </div>
 
-        <div className="flex items-center space-x-2">
-          <span className="text-sm text-gray-600 dark:text-gray-400">View:</span>
-          <Button
-            variant={viewMode === "detailed" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setViewMode("detailed")}
-            className="flex items-center space-x-2"
-          >
-            <List className="h-4 w-4" />
-            <span>Detailed</span>
-          </Button>
-          <Button
-            variant={viewMode === "compact" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setViewMode("compact")}
-            className="flex items-center space-x-2"
-          >
-            <Grid3X3 className="h-4 w-4" />
-            <span>Compact</span>
-          </Button>
+          {/* View Mode Toggle */}
+          <div className="flex items-center space-x-2">
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">View:</span>
+            <div className="flex rounded-md shadow-sm">
+              <Button
+                variant={viewMode === "detailed" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setViewMode("detailed")}
+                className="rounded-r-none border-r-0"
+              >
+                <List className="h-4 w-4 mr-2" />
+                <span>Detailed</span>
+              </Button>
+              <Button
+                variant={viewMode === "compact" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setViewMode("compact")}
+                className="rounded-l-none"
+              >
+                <Grid3X3 className="h-4 w-4 mr-2" />
+                <span>Compact</span>
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
 
