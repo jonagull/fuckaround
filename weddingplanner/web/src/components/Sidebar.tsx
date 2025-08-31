@@ -22,33 +22,28 @@ import { useLogout } from "weddingplanner-shared";
 
 const getNavigation = (projectId?: string) => [
   {
-    name: "Project Overview",
-    href: projectId ? `/project/${projectId}` : "#",
+    name: "Overview",
+    href: projectId ? `/event/${projectId}` : "#",
     icon: Home,
   },
   {
-    name: "Wedding Wizard",
-    href: projectId ? `/project/${projectId}/wedding-wizard` : "#",
-    icon: Heart,
-  },
-  {
     name: "Table Planning",
-    href: projectId ? `/project/${projectId}/table-planning` : "#",
+    href: projectId ? `/event/${projectId}/table-planning` : "#",
     icon: TableProperties,
   },
   {
     name: "Events & Timeline",
-    href: projectId ? `/project/${projectId}/events` : "#",
+    href: projectId ? `/event/${projectId}/events` : "#",
     icon: Calendar,
   },
   {
     name: "Guest List",
-    href: projectId ? `/project/${projectId}/guests` : "#",
+    href: projectId ? `/event/${projectId}/guests` : "#",
     icon: Users,
   },
   {
     name: "Settings",
-    href: projectId ? `/project/${projectId}/settings` : "#",
+    href: projectId ? `/event/${projectId}/settings` : "#",
     icon: Settings,
   },
 ];
@@ -68,8 +63,7 @@ export function Sidebar({ className }: SidebarProps) {
     router.push("/login");
   };
 
-  // Extract project ID from the URL
-  const projectId = pathname.split("/")[2]; // /project/[id]/...
+  const projectId = pathname.split("/")[2];
   const navigation = getNavigation(projectId);
 
   return (
@@ -87,11 +81,11 @@ export function Sidebar({ className }: SidebarProps) {
             className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
           >
             <div className="w-8 h-8 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-sm">W</span>
+              <span className="text-white font-bold text-sm">P</span>
             </div>
             {!isCollapsed && (
               <span className="text-xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
-                WeddingPlanner
+                Planio
               </span>
             )}
           </Link>

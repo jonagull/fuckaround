@@ -5,7 +5,17 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { UpdateEventModal } from "./UpdateEventModal";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "./ui/alert-dialog";
 
 export function EventCard({ event }: { event: Event }) {
   const { mutate: deleteEvent } = useDeleteEvent();
@@ -15,7 +25,6 @@ export function EventCard({ event }: { event: Event }) {
     deleteEvent(event.id);
     setIsDeleteDialogOpen(false);
   };
-
 
   return (
     <Card className="p-6 hover:shadow-lg transition-all duration-200 group relative">
@@ -41,7 +50,9 @@ export function EventCard({ event }: { event: Event }) {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel onClick={() => setIsDeleteDialogOpen(false)}>Cancel</AlertDialogCancel>
+              <AlertDialogCancel onClick={() => setIsDeleteDialogOpen(false)}>
+                Cancel
+              </AlertDialogCancel>
               <AlertDialogAction onClick={handleDeleteEvent}>Delete</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -56,7 +67,8 @@ export function EventCard({ event }: { event: Event }) {
           <div>
             <h3 className="font-semibold text-gray-900 dark:text-white">{event.eventName}</h3>
             <p className="text-sm text-gray-600 dark:text-gray-300">
-              Updated {event.updatedAt ? new Date(event.updatedAt).toLocaleDateString("no-NO") : "no date"}
+              Updated{" "}
+              {event.updatedAt ? new Date(event.updatedAt).toLocaleDateString("no-NO") : "no date"}
             </p>
           </div>
         </div>
@@ -77,14 +89,12 @@ export function EventCard({ event }: { event: Event }) {
         </div>
       </div>
 
-      <Link href={`/protected/event/${event.id}`} className="block">
+      <Link href={`/event/${event.id}`} className="block">
         <Button className="w-full bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 group-hover:scale-[1.02] transition-all duration-200">
           Open Event
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
       </Link>
-
     </Card>
   );
 }
-

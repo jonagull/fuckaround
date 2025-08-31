@@ -46,7 +46,7 @@ export const Header = () => {
 
   const handleGetStartedClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (isAuthenticated) router.push("/protected/dashboard");
+    if (isAuthenticated) router.push("/");
     else router.push("/login");
   };
 
@@ -73,16 +73,19 @@ export const Header = () => {
       <Link href="/">
         <div className="flex items-center space-x-2">
           <div className="w-8 h-8 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
-            <span className="text-white font-bold text-sm">W</span>
+            <span className="text-white font-bold text-sm">P</span>
           </div>
           <span className="text-xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
-            WeddingPlanner
+            Planio
           </span>
         </div>
       </Link>
       <div className="flex items-center space-x-4">
         {isAuthenticated && (
-          <Link href="/protected/invitations" className="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
+          <Link
+            href="/protected/invitations"
+            className="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
+          >
             <Bell className="h-5 w-5 text-gray-600 dark:text-gray-400" />
             {pendingInvitationCount > 0 && (
               <span className="absolute -top-1 -right-1 h-5 w-5 bg-rose-500 text-white text-xs rounded-full flex items-center justify-center">

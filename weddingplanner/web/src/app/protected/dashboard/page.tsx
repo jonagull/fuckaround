@@ -5,20 +5,11 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Heart,
-  Calendar,
-  Users,
-  Search,
-  Filter,
-  Settings,
-  Bell,
-} from "lucide-react";
+import { Heart, Calendar, Users, Search, Filter, Settings, Bell } from "lucide-react";
 import { useGetEvents, usePlannerInvitations } from "weddingplanner-shared";
 import { EventCard } from "@/components/EventCard";
 import { CreateEventModal } from "@/components/CreateEventModal";
 import PageWrapper from "@/components/PageWrapper";
-
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -27,7 +18,6 @@ export default function Home() {
   const { data: invitations } = usePlannerInvitations();
 
   const pendingInvitationCount = invitations?.received?.length || 0;
-
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
@@ -53,7 +43,8 @@ export default function Home() {
                 </div>
                 <div>
                   <p className="font-medium text-gray-900 dark:text-white">
-                    You have {pendingInvitationCount} pending invitation{pendingInvitationCount > 1 ? 's' : ''}
+                    You have {pendingInvitationCount} pending invitation
+                    {pendingInvitationCount > 1 ? "s" : ""}
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     Accept invitations to collaborate on events
@@ -140,14 +131,10 @@ export default function Home() {
           </Button>
         </div>
 
-
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {events?.map((project) => (
-            <EventCard
-              key={project.id}
-              event={project}
-            />
+            <EventCard key={project.id} event={project} />
           ))}
         </div>
 

@@ -7,7 +7,7 @@ export function ConditionalHeader() {
   const pathname = usePathname();
 
   // Don't show header on project pages and protected routes (they have sidebar/navigation instead)
-  if (pathname.startsWith("/project") || pathname.startsWith("/protected")) {
+  if (pathname.startsWith("/event") || pathname.startsWith("/protected")) {
     return null;
   }
 
