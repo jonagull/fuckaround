@@ -232,30 +232,49 @@ export default function Event() {
               </CardContent>
             </Card>
 
-            {/* Quick Actions */}
+            {/* Event Timeline Preview */}
             <Card className="border-0 shadow-lg">
               <CardHeader>
-                <CardTitle className="text-xl">Quick Actions</CardTitle>
-                <CardDescription>Manage your event planning tasks</CardDescription>
+                <CardTitle className="text-xl">Event Timeline</CardTitle>
+                <CardDescription>Key moments and milestones for your special day</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <Link href={`/project/${id}/guests`}>
-                    <Button variant="outline" className="w-full h-20 flex-col space-y-2">
-                      <Users2 className="h-6 w-6 text-blue-500" />
-                      <span className="text-sm">Guest List</span>
-                    </Button>
-                  </Link>
-                  <Link href={`/project/${id}/table-planning`}>
-                    <Button variant="outline" className="w-full h-20 flex-col space-y-2">
-                      <UtensilsCrossed className="h-6 w-6 text-green-500" />
-                      <span className="text-sm">Table Planning</span>
-                    </Button>
-                  </Link>
-                  <Link href={`/project/${id}/events`}>
-                    <Button variant="outline" className="w-full h-20 flex-col space-y-2">
-                      <Calendar className="h-6 w-6 text-purple-500" />
-                      <span className="text-sm">Timeline</span>
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <div className="w-3 h-3 bg-rose-500 rounded-full"></div>
+                    <div className="flex-1">
+                      <p className="font-medium text-gray-900 dark:text-white">Ceremony</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Main wedding ceremony
+                      </p>
+                    </div>
+                    <Badge variant="outline">2:00 PM</Badge>
+                  </div>
+                  <div className="flex items-center space-x-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                    <div className="flex-1">
+                      <p className="font-medium text-gray-900 dark:text-white">Reception</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Wedding reception and dinner
+                      </p>
+                    </div>
+                    <Badge variant="outline">6:00 PM</Badge>
+                  </div>
+                  <div className="flex items-center space-x-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                    <div className="flex-1">
+                      <p className="font-medium text-gray-900 dark:text-white">Dancing</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        First dance and party
+                      </p>
+                    </div>
+                    <Badge variant="outline">8:00 PM</Badge>
+                  </div>
+                </div>
+                <div className="mt-6 text-center">
+                  <Link href={`/event/${id}/timeline`}>
+                    <Button variant="outline" className="w-full">
+                      View Full Timeline
                     </Button>
                   </Link>
                 </div>
@@ -438,51 +457,6 @@ export default function Event() {
             </Card>
           </div>
         </div>
-
-        {/* Event Timeline Preview */}
-        <Card className="border-0 shadow-lg">
-          <CardHeader>
-            <CardTitle className="text-xl">Event Timeline</CardTitle>
-            <CardDescription>Key moments and milestones for your special day</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center space-x-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                <div className="w-3 h-3 bg-rose-500 rounded-full"></div>
-                <div className="flex-1">
-                  <p className="font-medium text-gray-900 dark:text-white">Ceremony</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Main wedding ceremony</p>
-                </div>
-                <Badge variant="outline">2:00 PM</Badge>
-              </div>
-              <div className="flex items-center space-x-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                <div className="flex-1">
-                  <p className="font-medium text-gray-900 dark:text-white">Reception</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Wedding reception and dinner
-                  </p>
-                </div>
-                <Badge variant="outline">6:00 PM</Badge>
-              </div>
-              <div className="flex items-center space-x-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <div className="flex-1">
-                  <p className="font-medium text-gray-900 dark:text-white">Dancing</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">First dance and party</p>
-                </div>
-                <Badge variant="outline">8:00 PM</Badge>
-              </div>
-            </div>
-            <div className="mt-6 text-center">
-              <Link href={`/project/${id}/events`}>
-                <Button variant="outline" className="w-full">
-                  View Full Timeline
-                </Button>
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </PageWrapper>
   );
