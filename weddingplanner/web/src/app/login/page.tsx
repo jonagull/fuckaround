@@ -25,13 +25,12 @@ export default function Login() {
   const router = useRouter();
 
   useEffect(() => {
-    if (isSuccess) {
-      setCurrentUser(data ?? null);
-      router.push("/");
+    if (isSuccess && data) {
+      console.log("data", data);
+      setCurrentUser(data.user);
+      router.push("/protected/dashboard");
     }
   }, [isSuccess, router, data, setCurrentUser]);
-
-  const handleLogin = () => login({ email, password });
 
   const validateForm = () => {
     const errors: { email?: string; password?: string } = {};

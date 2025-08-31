@@ -24,7 +24,7 @@ export default function ProjectDashboard({ params }: { params: { id: string } })
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Sarah & John's Wedding
+            Sarah & John&apos;s Wedding
           </h1>
           <p className="text-gray-600 dark:text-gray-300 mt-2">
             Project Overview • June 15, 2024 • Grand Ballroom, Downtown

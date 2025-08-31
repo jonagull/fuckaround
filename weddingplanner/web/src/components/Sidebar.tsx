@@ -82,7 +82,7 @@ export function Sidebar({ className }: SidebarProps) {
             <p className="text-sm font-medium text-rose-700 dark:text-rose-300 mb-1">
               Current Project
             </p>
-            <p className="text-sm text-rose-600 dark:text-rose-400">Sarah & John's Wedding</p>
+            <p className="text-sm text-rose-600 dark:text-rose-400">Sarah & John&apos;s Wedding</p>
           </div>
 
           {/* Back to Projects */}

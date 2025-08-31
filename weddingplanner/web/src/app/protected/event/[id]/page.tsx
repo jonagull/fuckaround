@@ -11,7 +11,7 @@ import { Calendar, Heart, MapPin, Users, ArrowLeft, Edit, Settings, Users2, Gift
 import Link from "next/link";
 import { SendInvitationModal } from "@/components/SendInvitationModal";
 import { InvitationForm } from "@/components/invitations/InvitationForm";
-import { InvitationList } from "@/components/invitations/InvitationList";
+// import { InvitationList } from "@/components/invitations/InvitationList"; // TODO: Implement guest invitations
 
 export default function Event() {
   const { id } = useParams();
@@ -57,7 +57,7 @@ export default function Event() {
     );
   }
 
-  const formatDate = (date: string | Date | null) => {
+  const formatDate = (date: string | Date | null | undefined) => {
 
     if (!date) return "Not set";
     try {
@@ -73,7 +73,7 @@ export default function Event() {
     }
   };
 
-  const formatTime = (date: string | Date | null) => {
+  const formatTime = (date: string | Date | null | undefined) => {
     if (!date) return "Not set";
     try {
       const dateObj = typeof date === 'string' ? new Date(date) : date;
@@ -282,8 +282,8 @@ export default function Event() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg">Event Planners</CardTitle>
-                  <Button 
-                    size="sm" 
+                  <Button
+                    size="sm"
                     onClick={() => setIsInviteModalOpen(true)}
                     className="bg-rose-500 hover:bg-rose-600"
                   >
@@ -295,33 +295,32 @@ export default function Event() {
               <CardContent className="space-y-3">
                 {event.planners && event.planners.length > 0 ? (
                   event.planners.map((planner) => (
-                    <div key={planner.id} className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <div key={planner.userId} className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">
                       <div className="flex items-center space-x-3">
                         <div className="w-8 h-8 bg-rose-100 dark:bg-rose-900 rounded-full flex items-center justify-center">
                           <Users className="h-4 w-4 text-rose-600 dark:text-rose-400" />
                         </div>
                         <div>
                           <p className="text-sm font-medium text-gray-900 dark:text-white">
-                            {planner.user?.name || "Unknown"}
+                            {planner.userName || "Unknown"}
                           </p>
                           <p className="text-xs text-gray-600 dark:text-gray-400">
-                            {planner.role === "OWNER" ? "Owner" :
-                             planner.role === "PLANNER" ? "Planner" :
-                             planner.role === "VENDOR" ? "Vendor" : "Guest"}
+                            {planner.role === 0 ? "Owner" :
+                              planner.role === 1 ? "Planner" :
+                                planner.role === 2 ? "Vendor" : "Guest"}
                           </p>
                         </div>
                       </div>
-                      <Badge 
-                        variant={planner.role === "OWNER" ? "default" : "outline"} 
-                        className={`text-xs ${
-                          planner.role === "OWNER" ? "bg-rose-500" :
-                          planner.role === "PLANNER" ? "bg-blue-500" :
-                          planner.role === "VENDOR" ? "bg-green-500" : "bg-gray-500"
-                        }`}
+                      <Badge
+                        variant={planner.role === 0 ? "default" : "outline"}
+                        className={`text-xs ${planner.role === 0 ? "bg-rose-500" :
+                          planner.role === 1 ? "bg-blue-500" :
+                            planner.role === 2 ? "bg-green-500" : "bg-gray-500"
+                          }`}
                       >
-                        {planner.role === "OWNER" ? "Owner" :
-                         planner.role === "PLANNER" ? "Planner" :
-                         planner.role === "VENDOR" ? "Vendor" : "Guest"}
+                        {planner.role === 0 ? "Owner" :
+                          planner.role === 1 ? "Planner" :
+                            planner.role === 2 ? "Vendor" : "Guest"}
                       </Badge>
                     </div>
                   ))
@@ -330,8 +329,8 @@ export default function Event() {
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                       No planners added yet
                     </p>
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       variant="outline"
                       onClick={() => setIsInviteModalOpen(true)}
                     >
@@ -445,14 +444,18 @@ export default function Event() {
                 onSuccess={() => setShowInvitationForm(false)}
               />
             ) : (
-              <InvitationList eventId={id as string} />
+              <>
+                {/* <InvitationList eventId={id as string} /> */}
+                <p className="text-gray-500">Guest invitations coming soon...</p>
+              </>
             )}
           </div>
-          
+
           <div>
             {showInvitationForm && (
               <div className="mt-11">
-                <InvitationList eventId={id as string} />
+                {/* <InvitationList eventId={id as string} /> */}
+                <p className="text-gray-500">Guest invitations coming soon...</p>
               </div>
             )}
           </div>

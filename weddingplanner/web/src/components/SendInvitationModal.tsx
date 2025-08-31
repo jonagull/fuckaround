@@ -32,7 +32,7 @@ interface SendInvitationModalProps {
 }
 
 // Helper function to get available roles based on user's role
-const getAvailableRoles = (userRole: string): EventRole[] => {
+const getAvailableRoles = (userRole: string | number): EventRole[] => {
   const roleHierarchy: EventRole[] = [
     EventRole.GUEST,
     EventRole.VENDOR,
@@ -40,7 +40,22 @@ const getAvailableRoles = (userRole: string): EventRole[] => {
     EventRole.OWNER,
   ];
   
-  const userIndex = roleHierarchy.indexOf(userRole as EventRole);
+  // Convert string role to number if needed
+  let roleValue: number;
+  if (typeof userRole === 'string') {
+    // Map string to enum value
+    const roleMap: Record<string, number> = {
+      'OWNER': EventRole.OWNER,
+      'PLANNER': EventRole.PLANNER,
+      'VENDOR': EventRole.VENDOR,
+      'GUEST': EventRole.GUEST,
+    };
+    roleValue = roleMap[userRole] ?? EventRole.GUEST;
+  } else {
+    roleValue = userRole;
+  }
+  
+  const userIndex = roleHierarchy.indexOf(roleValue);
   if (userIndex === -1) return [EventRole.GUEST];
   
   return roleHierarchy.slice(0, userIndex + 1);
@@ -61,7 +76,7 @@ export function SendInvitationModal({
   
   // Get current user's role in this event
   const currentUserRole = event?.planners?.find(
-    p => p.user?.id === currentUser?.id || p.userId === currentUser?.id
+    p => p.userId === currentUser?.id
   )?.role || EventRole.GUEST;
   
   const availableRoles = getAvailableRoles(currentUserRole);
@@ -100,7 +115,7 @@ export function SendInvitationModal({
         <DialogHeader>
           <DialogTitle>Invite Planner</DialogTitle>
           <DialogDescription>
-            Invite someone to help plan "{eventName}"
+            Invite someone to help plan &ldquo;{eventName}&rdquo;
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">

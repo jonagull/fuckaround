@@ -61,20 +61,20 @@ export function CreateEventModal() {
                 id="eventDate"
                 type="date"
                 className="mt-1"
-                value={formData.eventDate ? formData.eventDate.toISOString().split("T")[0] : ""}
+                value={formData.eventDate ? new Date(formData.eventDate).toISOString().split("T")[0] : ""}
                 onChange={(e) => setFormData({ ...formData, eventDate: new Date(e.target.value) })}
               />
             </div>
             <div>
               <Label htmlFor="eventType">Event Type</Label>
-              <Select value={formData.type} onValueChange={(value) => setFormData({ ...formData, type: value as EventType })}>
+              <Select value={formData.type.toString()} onValueChange={(value) => setFormData({ ...formData, type: parseInt(value) as EventType })}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select event type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={EventType.WEDDING}>Wedding</SelectItem>
-                  <SelectItem value={EventType.BIRTHDAY}>Birthday</SelectItem>
-                  <SelectItem value={EventType.OTHER}>Other</SelectItem>
+                  <SelectItem value={EventType.WEDDING.toString()}>Wedding</SelectItem>
+                  <SelectItem value={EventType.BIRTHDAY.toString()}>Birthday</SelectItem>
+                  <SelectItem value={EventType.OTHER.toString()}>Other</SelectItem>
                 </SelectContent>
               </Select>
             </div>

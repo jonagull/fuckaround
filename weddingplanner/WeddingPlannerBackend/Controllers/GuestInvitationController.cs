@@ -1,0 +1,120 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using WeddingPlannerBackend.Models.GuestInvitations;
+using WeddingPlannerBackend.Services;
+
+namespace WeddingPlannerBackend.Controllers;
+
+[ApiController]
+[Route("api/v1/guest-invitations")]
+[Authorize]
+public class GuestInvitationController : ControllerBase
+{
+    private readonly IGuestInvitationService _guestInvitationService;
+
+    public GuestInvitationController(IGuestInvitationService guestInvitationService)
+    {
+        _guestInvitationService = guestInvitationService;
+    }
+
+    private Guid GetUserId()
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+        {
+            throw new UnauthorizedAccessException("Invalid user token");
+        }
+        return userId;
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<ResponseGuestInvitation>> CreateInvitation([FromBody] RequestCreateGuestInvitation request)
+    {
+        try
+        {
+            var userId = GetUserId();
+            var result = await _guestInvitationService.CreateInvitationAsync(userId, request);
+            return CreatedAtAction(nameof(GetInvitation), new { id = result.Id }, result);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Forbid(ex.Message);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<ResponseGuestInvitation>> GetInvitation(Guid id)
+    {
+        try
+        {
+            var result = await _guestInvitationService.GetInvitationByIdAsync(id);
+            return Ok(result);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+    }
+
+    [HttpGet("event/{eventId}")]
+    public async Task<ActionResult<List<ResponseGuestInvitation>>> GetEventInvitations(Guid eventId)
+    {
+        try
+        {
+            var userId = GetUserId();
+            var result = await _guestInvitationService.GetEventInvitationsAsync(eventId, userId);
+            return Ok(result);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Forbid(ex.Message);
+        }
+    }
+
+    [HttpPatch("{id}")]
+    public async Task<ActionResult<ResponseGuestInvitation>> UpdateInvitation(Guid id, [FromBody] RequestUpdateGuestInvitation request)
+    {
+        try
+        {
+            var userId = GetUserId();
+            var result = await _guestInvitationService.UpdateInvitationAsync(id, userId, request);
+            return Ok(result);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Forbid(ex.Message);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteInvitation(Guid id)
+    {
+        try
+        {
+            var userId = GetUserId();
+            await _guestInvitationService.DeleteInvitationAsync(id, userId);
+            return NoContent();
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Forbid(ex.Message);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+    }
+}

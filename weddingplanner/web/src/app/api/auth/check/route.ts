@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ isAuthenticated: false });
     }
 
-    const secret = new TextEncoder().encode("your-secret-key-change-in-production");
+    const secret = new TextEncoder().encode("ThisIsAVerySecretKeyForJWTTokenGenerationPleaseChangeInProduction");
     const { payload } = await jwtVerify(accessToken.value, secret);
 
     if (!payload.exp) {

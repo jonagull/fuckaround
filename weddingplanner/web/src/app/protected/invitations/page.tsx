@@ -29,7 +29,7 @@ export default function InvitationsPage() {
           <CardHeader>
             <CardTitle>Your Invitations</CardTitle>
             <CardDescription>
-              Accept invitations to become a planner for events, or see the status of invitations you've sent
+              Accept invitations to become a planner for events, or see the status of invitations you&apos;ve sent
             </CardDescription>
           </CardHeader>
           <CardContent>

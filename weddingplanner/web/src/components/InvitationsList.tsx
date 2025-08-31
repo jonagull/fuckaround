@@ -81,7 +81,7 @@ export function InvitationsList() {
                 <CardContent>
                   {invitation.message && (
                     <p className="text-sm text-muted-foreground mb-3">
-                      "{invitation.message}"
+                      &ldquo;{invitation.message}&rdquo;
                     </p>
                   )}
                   <div className="flex gap-4 text-sm text-muted-foreground mb-4">

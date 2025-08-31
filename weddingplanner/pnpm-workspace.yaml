@@ -1,4 +1,3 @@
 packages:
-  - 'packages/*'
+  - 'frontend-shared'
   - 'web'
-  - 'backend'

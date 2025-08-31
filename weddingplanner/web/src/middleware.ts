@@ -10,7 +10,7 @@ export async function middleware(request: NextRequest) {
 
   // TODO
   // if (pathname.startsWith("/protected")) return checkAuth(request);
-  if (publicRoutes.includes(pathname)) return checkAuth(request);
+  if (!publicRoutes.includes(pathname)) return checkAuth(request);
 
   return NextResponse.next();
 }
@@ -23,9 +23,11 @@ async function checkAuth(request: NextRequest) {
 
   if (!accessToken?.value || !refreshToken?.value) return redirectToLogin(request);
 
+
   try {
-    const secret = new TextEncoder().encode("your-secret-key-change-in-production");
+    const secret = new TextEncoder().encode("ThisIsAVerySecretKeyForJWTTokenGenerationPleaseChangeInProduction");
     const { payload } = await jwtVerify(accessToken.value, secret);
+
     if (!payload.exp) return redirectToLogin(request);
 
     const expires = payload.exp;

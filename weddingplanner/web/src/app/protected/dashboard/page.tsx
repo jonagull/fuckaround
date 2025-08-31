@@ -1,15 +1,12 @@
 "use client";
 
 import React from "react";
-import { useEffect } from "react";
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Heart,
-  Plus,
   Calendar,
   Users,
   Search,
@@ -18,10 +15,10 @@ import {
   Bell,
 } from "lucide-react";
 import { useGetEvents, usePlannerInvitations } from "weddingplanner-shared";
-import { toast } from "sonner";
 import { EventCard } from "@/components/EventCard";
 import { CreateEventModal } from "@/components/CreateEventModal";
 import PageWrapper from "@/components/PageWrapper";
+import { useCurrentUser } from "@/components/CurrentUserContext";
 
 
 export default function Home() {
@@ -32,6 +29,7 @@ export default function Home() {
 
   const pendingInvitationCount = invitations?.received?.length || 0;
 
+  const { currentUser } = useCurrentUser();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
@@ -100,7 +98,6 @@ export default function Home() {
               </div>
             </div>
           </Card>
-
           <Card className="p-6">
             <div className="flex items-center">
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">

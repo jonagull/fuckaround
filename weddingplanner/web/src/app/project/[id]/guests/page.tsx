@@ -41,7 +41,7 @@ export default function ProjectGuestsPage({ params }: { params: { id: string } }
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Guest List</h1>
           <p className="text-gray-600 dark:text-gray-300 mt-2">
-            Manage guests for Sarah & John's Wedding and track RSVPs
+            Manage guests for Sarah & John&apos;s Wedding and track RSVPs
           </p>
         </div>
         <Button className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600">

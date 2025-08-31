@@ -1,41 +1,39 @@
 {
-    "project": {
-        "name": "weddingplanner",
-        "description": "A wedding planning app with an Express + Prisma backend and a Next.js frontend. Monorepo managed with pnpm workspaces.",
+  "project": {
+    "name": "weddingplanner",
+      "description": "A wedding planning app with a C# .NET 8.0 backend and a Next.js frontend. Monorepo managed with pnpm workspaces.",
         "main_technologies": [
-            "TypeScript",
-            "Express.js",
-            "Prisma",
-            "PostgreSQL",
-            "Next.js 14 (App Router)",
-            "pnpm workspaces",
-            "Docker"
+          "TypeScript",
+          "C#",
+          ".NET 8.0",
+          "Entity Framework Core",
+          "PostgreSQL",
+          "Next.js 14 (App Router)",
+          "pnpm workspaces",
+          "Docker"
         ],
-        "project_structure": {
-            "app": "Expo/React Native app",
-            "backend": "Express.js + Prisma backend",
-            "web": "Next.js frontend",
-            "packages/frontend-shared": "Shared frontend utilities/components",
-            "packages/types": "Shared TypeScript types"
-        }
+          "project_structure": {
+      "web": "Next.js frontend",
+        "frontend-shared": "Shared frontend utilities/components/types",
+          "WeddingPlannerBackend": "Backend C# .NET 8.0"
     },
     "coding_style": {
-        "typescript": "Strict mode enabled, prefer explicit types over inference in exported functions.",
-        "backend": "Use Express routers inside /backend/routes, middleware in /backend/middleware. Use Prisma client for DB access, avoid raw SQL unless necessary.",
+      "typescript": "Strict mode enabled, prefer explicit types over inference in exported functions.",
         "frontend": "Use Next.js App Router with functional components. Use hooks over class components. Keep components inside /web/src/components. Styling via Tailwind.",
-        "shared": "All cross-project types live in packages/types. Do not redefine types in frontend/backend separately."
+          "frontend-sjare": "All cross-project types live in packages/types. Do not redefine types in frontend separately."
     },
     "ai_rules": {
-        "responses": [
-            "Explain reasoning for important design choices.",
-            "Prefer minimal working code snippets, not overly abstracted boilerplate.",
-            "Use consistent naming: camelCase for JS/TS variables/functions, PascalCase for components, snake_case for database fields.",
-            "When suggesting changes, explain where in the repo structure they should go."
-        ],
+      "responses": [
+        "Explain reasoning for important design choices.",
+        "Prefer minimal working code snippets, not overly abstracted boilerplate.",
+        "Use consistent naming: camelCase for JS/TS variables/functions, PascalCase for components, snake_case for database fields.",
+        "When suggesting changes, explain where in the repo structure they should go."
+      ],
         "do_not": [
-            "Do not suggest npm if pnpm is already used.",
-            "Do not add frontend/backend code without referencing correct workspace.",
-            "Do not create new folders without explaining why."
+          "Do not suggest npm if pnpm is already used.",
+          "Do not add frontend/backend code without referencing correct workspace.",
+          "Do not create new folders without explaining why."
         ]
     }
+  }
 }

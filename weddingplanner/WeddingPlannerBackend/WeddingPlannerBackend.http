@@ -1,0 +1,6 @@
+@WeddingPlannerBackend_HostAddress = http://localhost:5155
+
+GET {{WeddingPlannerBackend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
