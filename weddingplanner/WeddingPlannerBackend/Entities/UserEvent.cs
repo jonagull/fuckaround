@@ -5,6 +5,7 @@ namespace WeddingPlannerBackend.Entities;
 public enum EventRole
 {
   OWNER,
+  ADMIN,
   PLANNER,
   VENDOR,
   GUEST
