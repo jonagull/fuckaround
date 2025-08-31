@@ -9,13 +9,14 @@ import { Users, Search, Mail, Phone, Send } from "lucide-react";
 import { CsvImportModal } from "@/components/guests/CsvImportModal";
 import { AddGuestModal } from "@/components/guests/AddGuestModal";
 import { useGetInvitations, useSendGuestInvitations } from "weddingplanner-shared";
-import { useState } from "react";
+import { useState, use } from "react";
 import { toast } from "sonner";
 
-export default function ProjectGuestsPage({ params }: { params: { id: string } }) {
+export default function ProjectGuestsPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedInvitations, setSelectedInvitations] = useState<Set<string>>(new Set());
-  const { data: invitations, isLoading, error } = useGetInvitations(params.id);
+  const { data: invitations, isLoading, error } = useGetInvitations(id);
   const sendInvitations = useSendGuestInvitations();
 
   // Calculate stats from live data
@@ -107,7 +108,7 @@ export default function ProjectGuestsPage({ params }: { params: { id: string } }
 
     const invitationIds = Array.from(selectedInvitations);
     sendInvitations.mutate(
-      { invitationIds, eventId: params.id },
+      { invitationIds, eventId: id },
       {
         onSuccess: (response) => {
           toast.success(`Successfully sent ${response.successfullySent} notifications`);
@@ -138,8 +139,8 @@ export default function ProjectGuestsPage({ params }: { params: { id: string } }
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <CsvImportModal projectId={params?.id} />
-          <AddGuestModal eventId={params?.id} />
+          <CsvImportModal projectId={id} />
+          <AddGuestModal eventId={id} />
         </div>
       </div>
 

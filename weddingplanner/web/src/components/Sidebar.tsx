@@ -27,6 +27,11 @@ const getNavigation = (projectId?: string) => [
     icon: Home,
   },
   {
+    name: "Guest List",
+    href: projectId ? `/event/${projectId}/guests` : "#",
+    icon: Users,
+  },
+  {
     name: "Table Planning",
     href: projectId ? `/event/${projectId}/table-planning` : "#",
     icon: TableProperties,
@@ -35,11 +40,6 @@ const getNavigation = (projectId?: string) => [
     name: "Events & Timeline",
     href: projectId ? `/event/${projectId}/timeline` : "#",
     icon: Calendar,
-  },
-  {
-    name: "Guest List",
-    href: projectId ? `/event/${projectId}/guests` : "#",
-    icon: Users,
   },
   {
     name: "Settings",
