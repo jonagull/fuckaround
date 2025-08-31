@@ -5,7 +5,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Users, Search, Mail, Phone, Send } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Users, Search, Mail, Phone, Send, Grid3X3, List, ArrowUpDown } from "lucide-react";
 import { CsvImportModal } from "@/components/guests/CsvImportModal";
 import { AddGuestModal } from "@/components/guests/AddGuestModal";
 import { useGetInvitations, useSendGuestInvitations } from "weddingplanner-shared";
@@ -16,6 +23,9 @@ export default function ProjectGuestsPage({ params }: { params: Promise<{ id: st
   const { id } = use(params);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedInvitations, setSelectedInvitations] = useState<Set<string>>(new Set());
+  const [viewMode, setViewMode] = useState<"detailed" | "compact">("detailed");
+  const [sortBy, setSortBy] = useState<"name" | "status" | "email" | "date">("status");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const { data: invitations, isLoading, error } = useGetInvitations(id);
   const sendInvitations = useSendGuestInvitations();
 
@@ -77,12 +87,46 @@ export default function ProjectGuestsPage({ params }: { params: Promise<{ id: st
       }
     }) || [];
 
+  // Sort filtered invitations
+  const sortedInvitations = [...filteredInvitations].sort((a, b) => {
+    let aValue: string | number | Date;
+    let bValue: string | number | Date;
+
+    switch (sortBy) {
+      case "name":
+        aValue = `${a.guestFirstName || ""} ${a.guestLastName || ""}`.toLowerCase();
+        bValue = `${b.guestFirstName || ""} ${b.guestLastName || ""}`.toLowerCase();
+        break;
+      case "status":
+        // Sort by status priority: PENDING (highest), ACCEPTED, REJECTED (lowest)
+        const statusPriority = { PENDING: 3, ACCEPTED: 2, REJECTED: 1 };
+        aValue = statusPriority[a.status as keyof typeof statusPriority] || 0;
+        bValue = statusPriority[b.status as keyof typeof statusPriority] || 0;
+        break;
+      case "email":
+        aValue = (a.guestEmail || "").toLowerCase();
+        bValue = (b.guestEmail || "").toLowerCase();
+        break;
+      case "date":
+        aValue = a.emailSentAt ? new Date(a.emailSentAt) : new Date(0);
+        bValue = b.emailSentAt ? new Date(b.emailSentAt) : new Date(0);
+        break;
+      default:
+        aValue = "";
+        bValue = "";
+    }
+
+    if (aValue < bValue) return sortOrder === "asc" ? -1 : 1;
+    if (aValue > bValue) return sortOrder === "asc" ? 1 : -1;
+    return 0;
+  });
+
   // Handle select all
   const handleSelectAll = () => {
-    if (selectedInvitations.size === filteredInvitations.length) {
+    if (selectedInvitations.size === sortedInvitations.length) {
       setSelectedInvitations(new Set());
     } else {
-      setSelectedInvitations(new Set(filteredInvitations.map((inv) => inv.id)));
+      setSelectedInvitations(new Set(sortedInvitations.map((inv) => inv.id)));
     }
   };
 
@@ -124,10 +168,15 @@ export default function ProjectGuestsPage({ params }: { params: Promise<{ id: st
   };
 
   // Get unsent invitations for select all functionality
-  const unsentInvitations = filteredInvitations.filter((inv) => !inv.emailSentAt);
+  const unsentInvitations = sortedInvitations.filter((inv) => !inv.emailSentAt);
   const allUnsentSelected =
     unsentInvitations.length > 0 &&
     unsentInvitations.every((inv) => selectedInvitations.has(inv.id));
+
+  // Toggle sort order
+  const toggleSortOrder = () => {
+    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+  };
 
   return (
     <div className="space-y-6">
@@ -217,15 +266,59 @@ export default function ProjectGuestsPage({ params }: { params: Promise<{ id: st
         </Card>
       </div>
 
-      {/* Search */}
-      <div className="relative max-w-sm">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-        <Input
-          placeholder="Search guests..."
-          className="pl-10"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+      {/* Search, Sort, and View Toggle */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <div className="relative max-w-sm">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Input
+              placeholder="Search guests..."
+              className="pl-10"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <span className="text-sm text-gray-600 dark:text-gray-400">Sort by:</span>
+            <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
+              <SelectTrigger className="w-32">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="status">Status</SelectItem>
+                <SelectItem value="name">Name</SelectItem>
+                <SelectItem value="email">Email</SelectItem>
+                <SelectItem value="date">Date Sent</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button variant="outline" size="sm" onClick={toggleSortOrder} className="px-2">
+              <ArrowUpDown className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <span className="text-sm text-gray-600 dark:text-gray-400">View:</span>
+          <Button
+            variant={viewMode === "detailed" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setViewMode("detailed")}
+            className="flex items-center space-x-2"
+          >
+            <List className="h-4 w-4" />
+            <span>Detailed</span>
+          </Button>
+          <Button
+            variant={viewMode === "compact" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setViewMode("compact")}
+            className="flex items-center space-x-2"
+          >
+            <Grid3X3 className="h-4 w-4" />
+            <span>Compact</span>
+          </Button>
+        </div>
       </div>
 
       {/* Content Area */}
@@ -245,7 +338,7 @@ export default function ProjectGuestsPage({ params }: { params: Promise<{ id: st
         /* Guest List */
         <div className="space-y-4">
           {/* Bulk Actions */}
-          {filteredInvitations.length > 0 && (
+          {sortedInvitations.length > 0 && (
             <Card className="p-4 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
@@ -285,7 +378,7 @@ export default function ProjectGuestsPage({ params }: { params: Promise<{ id: st
             </Card>
           )}
 
-          {filteredInvitations.length === 0 && searchTerm ? (
+          {sortedInvitations.length === 0 && searchTerm ? (
             <div className="text-center py-12">
               <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Search className="h-8 w-8 text-gray-400" />
@@ -295,7 +388,7 @@ export default function ProjectGuestsPage({ params }: { params: Promise<{ id: st
               </h3>
               <p className="text-gray-600 dark:text-gray-300">Try adjusting your search terms.</p>
             </div>
-          ) : filteredInvitations.length === 0 && !searchTerm ? (
+          ) : sortedInvitations.length === 0 && !searchTerm ? (
             <div className="text-center py-12">
               <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Users className="h-8 w-8 text-gray-400" />
@@ -308,86 +401,156 @@ export default function ProjectGuestsPage({ params }: { params: Promise<{ id: st
               </p>
             </div>
           ) : (
-            filteredInvitations.map((invitation) => (
-              <Card key={invitation.id} className="p-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3 flex-1">
-                    <Checkbox
-                      checked={selectedInvitations.has(invitation.id)}
-                      onCheckedChange={() => handleSelectInvitation(invitation.id)}
-                      className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-3 mb-2">
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                          {invitation.guestFirstName} {invitation.guestLastName}
-                        </h3>
-                        <Badge
-                          variant="secondary"
-                          className={
-                            invitation.status === "ACCEPTED"
-                              ? "bg-green-100 text-green-700"
+            sortedInvitations.map((invitation) => (
+              <Card key={invitation.id} className={viewMode === "detailed" ? "p-6" : "p-2"}>
+                {viewMode === "detailed" ? (
+                  // Detailed View (Original)
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3 flex-1">
+                      <Checkbox
+                        checked={selectedInvitations.has(invitation.id)}
+                        onCheckedChange={() => handleSelectInvitation(invitation.id)}
+                        className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-3 mb-2">
+                          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                            {invitation.guestFirstName} {invitation.guestLastName}
+                          </h3>
+                          <Badge
+                            variant="secondary"
+                            className={
+                              invitation.status === "ACCEPTED"
+                                ? "bg-green-100 text-green-700"
+                                : invitation.status === "PENDING"
+                                ? "bg-yellow-100 text-yellow-700"
+                                : "bg-red-100 text-red-700"
+                            }
+                          >
+                            {invitation.status === "ACCEPTED"
+                              ? "Confirmed"
                               : invitation.status === "PENDING"
-                              ? "bg-yellow-100 text-yellow-700"
-                              : "bg-red-100 text-red-700"
-                          }
-                        >
-                          {invitation.status === "ACCEPTED"
-                            ? "Confirmed"
-                            : invitation.status === "PENDING"
-                            ? "Pending"
-                            : "Declined"}
-                        </Badge>
-                        {invitation.additionalGuestsCount > 0 && (
-                          <Badge variant="secondary" className="bg-blue-100 text-blue-700">
-                            +{invitation.additionalGuestsCount}
+                              ? "Pending"
+                              : "Declined"}
                           </Badge>
-                        )}
-                        {invitation.emailSentAt && (
-                          <Badge variant="secondary" className="bg-gray-100 text-gray-700">
-                            Email Sent
-                          </Badge>
-                        )}
-                      </div>
-                      <div className="flex items-center space-x-6 text-sm text-gray-600 dark:text-gray-300">
-                        <div className="flex items-center">
-                          <Mail className="mr-1 h-4 w-4" />
-                          {invitation.guestEmail}
+                          {invitation.additionalGuestsCount > 0 && (
+                            <Badge variant="secondary" className="bg-blue-100 text-blue-700">
+                              +{invitation.additionalGuestsCount}
+                            </Badge>
+                          )}
+                          {invitation.emailSentAt && (
+                            <Badge variant="secondary" className="bg-gray-100 text-gray-700">
+                              Email Sent
+                            </Badge>
+                          )}
                         </div>
-                        <div className="flex items-center">
-                          <Phone className="mr-1 h-4 w-4" />+{invitation.guestPhoneCountryCode}{" "}
-                          {invitation.guestPhoneNumber}
-                        </div>
-                        {invitation.eventDate && (
+                        <div className="flex items-center space-x-6 text-sm text-gray-600 dark:text-gray-300">
                           <div className="flex items-center">
-                            <Users className="mr-1 h-4 w-4" />
-                            {new Date(invitation.eventDate).toLocaleDateString()}
+                            <Mail className="mr-1 h-4 w-4" />
+                            {invitation.guestEmail}
+                          </div>
+                          <div className="flex items-center">
+                            <Phone className="mr-1 h-4 w-4" />
+                            {invitation.guestPhoneCountryCode} {invitation.guestPhoneNumber}
+                          </div>
+                          {invitation.eventDate && (
+                            <div className="flex items-center">
+                              <Users className="mr-1 h-4 w-4" />
+                              {new Date(invitation.eventDate).toLocaleDateString()}
+                            </div>
+                          )}
+                        </div>
+                        {invitation.additionalGuests.length > 0 && (
+                          <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                            <span className="font-medium">Additional guests:</span>{" "}
+                            {invitation.additionalGuests
+                              .map((guest) => `${guest.firstName} ${guest.lastName}`)
+                              .join(", ")}
                           </div>
                         )}
                       </div>
-                      {invitation.additionalGuests.length > 0 && (
-                        <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                          <span className="font-medium">Additional guests:</span>{" "}
-                          {invitation.additionalGuests
-                            .map((guest) => `${guest.firstName} ${guest.lastName}`)
-                            .join(", ")}
-                        </div>
-                      )}
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Button variant="outline" size="sm">
+                        Edit
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                      >
+                        Send Reminder
+                      </Button>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Button variant="outline" size="sm">
-                      Edit
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-                    >
-                      Send Reminder
-                    </Button>
+                ) : (
+                  // Compact View
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2 flex-1">
+                      <Checkbox
+                        checked={selectedInvitations.has(invitation.id)}
+                        onCheckedChange={() => handleSelectInvitation(invitation.id)}
+                        className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600 h-4 w-4"
+                      />
+                      <div className="flex items-center space-x-3 flex-1">
+                        <div className="min-w-0 flex-1">
+                          <h3 className="font-medium text-gray-900 dark:text-white truncate text-sm">
+                            {invitation.guestFirstName} {invitation.guestLastName}
+                          </h3>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                            {invitation.guestEmail}
+                          </p>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <Badge
+                            variant="secondary"
+                            className={
+                              invitation.status === "ACCEPTED"
+                                ? "bg-green-100 text-green-700 text-xs px-1 py-0 h-5"
+                                : invitation.status === "PENDING"
+                                ? "bg-yellow-100 text-yellow-700 text-xs px-1 py-0 h-5"
+                                : "bg-red-100 text-red-700 text-xs px-1 py-0 h-5"
+                            }
+                          >
+                            {invitation.status === "ACCEPTED"
+                              ? "✓"
+                              : invitation.status === "PENDING"
+                              ? "?"
+                              : "✗"}
+                          </Badge>
+                          {invitation.additionalGuestsCount > 0 && (
+                            <Badge
+                              variant="secondary"
+                              className="bg-blue-100 text-blue-700 text-xs px-1 py-0 h-5"
+                            >
+                              +{invitation.additionalGuestsCount}
+                            </Badge>
+                          )}
+                          {invitation.emailSentAt && (
+                            <Badge
+                              variant="secondary"
+                              className="bg-gray-100 text-gray-700 text-xs px-1 py-0 h-5"
+                            >
+                              📧
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-1">
+                      <Button variant="outline" size="sm" className="h-6 px-2 text-xs">
+                        Edit
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-6 px-2 text-xs text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                      >
+                        Send
+                      </Button>
+                    </div>
                   </div>
-                </div>
+                )}
               </Card>
             ))
           )}
