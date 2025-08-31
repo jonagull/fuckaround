@@ -26,21 +26,32 @@ export const getEventsFunction = asyncHandler<EmptyBody, Event[]>(200, async (re
   const events = await prisma.event.findMany({
     where: { id: { in: eventIds } },
     include: {
-      planners: true,
+      planners: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true
+            }
+          }
+        }
+      },
       venueAddress: true,
     },
   });
 
   return events.map(event => ({
     ...event,
-    eventDescription: event.eventDescription || '',
-    eventDate: event.eventDate || new Date(),
+    eventDescription: event.eventDescription,
+    eventDate: event.eventDate,
     venueAddress: event.venueAddress || null,
     eventType: event.eventType as EventType,
-    planners: userEvents.map(userEvent => ({
-      ...userEvent,
-      role: userEvent.role as EventRole,
-      stringRole: userEvent.stringRole as string as "Bride" | "Groom" | "Birthday Boi",
+    planners: event.planners.map(p => ({
+      ...p,
+      role: p.role as EventRole,
+      stringRole: p.stringRole as "Bride" | "Groom" | "Birthday Boi",
+      user: p.user
     }))
-  } satisfies Event))
+  }))
 });

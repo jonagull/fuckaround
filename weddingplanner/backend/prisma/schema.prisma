@@ -8,15 +8,17 @@ datasource db {
 }
 
 model User {
-  id             String        @id @default(uuid())
-  email          String        @unique
-  name           String
-  phone          String?
-  hashedPassword String
-  refreshToken   RefreshToken[]
-  userEvents     UserEvent[]
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  id                   String               @id @default(uuid())
+  email                String               @unique
+  name                 String
+  phone                String?
+  hashedPassword       String
+  refreshToken         RefreshToken[]
+  userEvents           UserEvent[]
+  sentInvitations      PlannerInvitation[]  @relation("InvitationSender")
+  receivedInvitations  PlannerInvitation[]  @relation("InvitationReceiver")
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
 }
 
 model RefreshToken {
@@ -58,16 +60,18 @@ model Address {
 }
 
 model Event {
-  id               String      @id @default(uuid())
+  id               String              @id @default(uuid())
   eventName        String
   eventDescription String?
   eventType        EventType
   eventDate        DateTime?
   venueAddressId   String?
-  venueAddress     Address?    @relation(fields: [venueAddressId], references: [id])
+  venueAddress     Address?            @relation(fields: [venueAddressId], references: [id])
   planners         UserEvent[]
-  createdAt        DateTime    @default(now())
-  updatedAt        DateTime    @updatedAt
+  invitations      PlannerInvitation[]
+  guestInvitations Invitation[]
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
 }
 
 model UserEvent {
@@ -82,4 +86,57 @@ model UserEvent {
   updatedAt  DateTime  @updatedAt
 
   @@unique([userId, eventId])
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  EXPIRED
+}
+
+model PlannerInvitation {
+  id           String           @id @default(uuid())
+  eventId      String
+  event        Event            @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  senderId     String
+  sender       User             @relation("InvitationSender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiverId   String
+  receiver     User             @relation("InvitationReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  role         EventRole        @default(PLANNER)
+  status       InvitationStatus @default(PENDING)
+  message      String?
+  expiresAt    DateTime         @default(dbgenerated("NOW() + INTERVAL '7 days'"))
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@unique([eventId, receiverId])
+  @@index([receiverId, status])
+  @@index([eventId, status])
+}
+
+model Invitation {
+  id                    String    @id @default(uuid())
+  eventId               String
+  event                 Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  
+  guestFirstName        String
+  guestLastName         String
+  guestEmail            String
+  guestPhoneNumber      String
+  guestPhoneCountryCode String
+  
+  invitedAt             DateTime  @default(now())
+  acceptedAt            DateTime?
+  rejectedAt            DateTime?
+  
+  additionalGuestsCount Int       @default(0)
+  additionalGuests      Json      @default("[]")
+  
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  
+  @@unique([eventId, guestEmail])
+  @@index([eventId])
+  @@index([guestEmail])
 }

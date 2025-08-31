@@ -63,17 +63,15 @@ async function getPlaceDetails(placeId, apiKey) {
     }
 }
 exports.getAddressSearchFunction = (0, types_1.asyncHandler)(200, async (req) => {
-    const { query } = req.query;
+    const { query } = req.params;
     const userId = req.userId;
     if (!userId)
         return (0, ApiError_1.unauthorized)("User ID not found");
-    if (!query || query.length < 2) {
-        return [];
-    }
+    if (!query || query.length < 2)
+        return (0, ApiError_1.badRequest)("Query is required and must be at least 2 characters long");
     const apiKey = process.env.GOOGLE_PLACES_API_KEY;
-    if (!apiKey) {
-        throw new Error("Google Places API key not configured");
-    }
+    if (!apiKey)
+        return (0, ApiError_1.badRequest)("Google Places API key not configured");
     try {
         // Call Google Places Autocomplete API
         const autocompleteUrl = `${AUTOCOMPLETE_URL}?input=${encodeURIComponent(query)}&key=${apiKey}&language=no&components=country:no&types=address`;

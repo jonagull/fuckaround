@@ -10,6 +10,9 @@ const users_1 = __importDefault(require("./routes/users"));
 const auth_1 = __importDefault(require("./routes/auth"));
 const errorHandler_1 = require("./middleware/errorHandler");
 const event_1 = __importDefault(require("./routes/event"));
+const addressSearch_1 = __importDefault(require("./routes/addressSearch"));
+const plannerInvitation_1 = __importDefault(require("./routes/plannerInvitation"));
+const invitation_1 = __importDefault(require("./routes/invitation"));
 const app = (0, express_1.default)();
 const PORT = 3070;
 // CORS configuration
@@ -25,6 +28,8 @@ app.use((0, cookie_parser_1.default)());
 app.use("/api/auth", auth_1.default); // auth routes
 app.use("/api/users", users_1.default); // users route
 app.use("/api/events", event_1.default); // event routes
-// app.use(/api/invitations', invitationRoites) // invitation rotues.
+app.use("/api/addressSearch", addressSearch_1.default); // address search routes
+app.use("/api/invitations", plannerInvitation_1.default); // planner invitation routes
+app.use("/api/guest-invitations", invitation_1.default); // guest invitation routes
 app.use(errorHandler_1.errorHandler);
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

@@ -11,14 +11,36 @@ exports.getEventFunction = (0, types_1.asyncHandler)(200, async (req) => {
         return (0, ApiError_1.badRequest)("Event ID is required");
     if (!userId)
         return (0, ApiError_1.unauthorized)("User ID not found");
-    const event = await prisma_1.prisma.event.findUnique({ where: { id: eventId }, include: { venueAddress: true, planners: true } });
+    const event = await prisma_1.prisma.event.findUnique({
+        where: { id: eventId },
+        include: {
+            venueAddress: true,
+            planners: {
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true
+                        }
+                    }
+                }
+            }
+        }
+    });
     if (!event)
         return (0, ApiError_1.notFound)("Event not found");
     console.warn(event);
-    return {
+    const eventResponse = {
         ...event,
         eventType: event.eventType,
         venueAddress: event.venueAddress || null,
-        planners: event.planners,
+        planners: event.planners.map(p => ({
+            ...p,
+            role: p.role,
+            stringRole: p.stringRole,
+            user: p.user
+        }))
     };
+    return eventResponse;
 });

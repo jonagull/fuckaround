@@ -23,20 +23,31 @@ exports.getEventsFunction = (0, types_1.asyncHandler)(200, async (req) => {
     const events = await prisma_1.prisma.event.findMany({
         where: { id: { in: eventIds } },
         include: {
-            planners: true,
+            planners: {
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true
+                        }
+                    }
+                }
+            },
             venueAddress: true,
         },
     });
     return events.map(event => ({
         ...event,
-        eventDescription: event.eventDescription || '',
-        eventDate: event.eventDate || new Date(),
+        eventDescription: event.eventDescription,
+        eventDate: event.eventDate,
         venueAddress: event.venueAddress || null,
         eventType: event.eventType,
-        planners: userEvents.map(userEvent => ({
-            ...userEvent,
-            role: userEvent.role,
-            stringRole: userEvent.stringRole,
+        planners: event.planners.map(p => ({
+            ...p,
+            role: p.role,
+            stringRole: p.stringRole,
+            user: p.user
         }))
     }));
 });
