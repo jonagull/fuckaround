@@ -1,8 +1,7 @@
-import { Event, useDeleteEvent, useUpdateEvent } from "weddingplanner-shared";
+import { Event, useDeleteEvent } from "weddingplanner-shared";
 import { Card } from "./ui/card";
-import { Calendar, Heart, MapPin, Users, ArrowRight, Trash, Pencil } from "lucide-react";
+import { Calendar, Heart, MapPin, Users, ArrowRight, Trash } from "lucide-react";
 import React, { useState } from "react";
-import { Progress } from "./ui/progress";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { UpdateEventModal } from "./UpdateEventModal";

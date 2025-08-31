@@ -5,7 +5,6 @@ import { Progress } from "@/components/ui/progress";
 import {
   Calendar,
   Users,
-  MapPin,
   Clock,
   CheckCircle,
   AlertCircle,
@@ -15,8 +14,7 @@ import {
   Camera,
 } from "lucide-react";
 
-export default function ProjectDashboard({ params }: { params: { id: string } }) {
-  const projectId = params.id;
+export default function ProjectDashboard() {
 
   return (
     <div className="space-y-6">

@@ -7,7 +7,6 @@ import { Skeleton } from "./ui/skeleton";
 import { useMe, useLogout, usePlannerInvitations } from "weddingplanner-shared";
 import { useCurrentUser } from "./CurrentUserContext";
 import { Bell } from "lucide-react";
-import { Badge } from "./ui/badge";
 
 export const Header = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);

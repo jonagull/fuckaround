@@ -18,7 +18,6 @@ import { useGetEvents, usePlannerInvitations } from "weddingplanner-shared";
 import { EventCard } from "@/components/EventCard";
 import { CreateEventModal } from "@/components/CreateEventModal";
 import PageWrapper from "@/components/PageWrapper";
-import { useCurrentUser } from "@/components/CurrentUserContext";
 
 
 export default function Home() {
@@ -29,7 +28,6 @@ export default function Home() {
 
   const pendingInvitationCount = invitations?.received?.length || 0;
 
-  const { currentUser } = useCurrentUser();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">

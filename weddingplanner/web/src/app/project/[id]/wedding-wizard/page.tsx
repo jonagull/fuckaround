@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Heart, Wand2 } from "lucide-react";
 
-export default function ProjectWeddingWizardPage({ params }: { params: { id: string } }) {
+export default function ProjectWeddingWizardPage() {
   return (
     <div className="space-y-6">
       <div>

@@ -2,9 +2,9 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Settings, User, Bell, Shield, Palette } from "lucide-react";
+import { User, Bell, Shield, Palette } from "lucide-react";
 
-export default function ProjectSettingsPage({ params }: { params: { id: string } }) {
+export default function ProjectSettingsPage() {
   return (
     <div className="space-y-6">
       <div>

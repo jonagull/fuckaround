@@ -3,7 +3,6 @@
 import { useParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -126,7 +125,6 @@ export default function InvitationPage() {
 
   const hasResponded = invitation.acceptedAt || invitation.rejectedAt;
   const isAccepted = invitation.acceptedAt;
-  const isDeclined = invitation.rejectedAt;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 py-8 px-4">

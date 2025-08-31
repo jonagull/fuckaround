@@ -33,7 +33,7 @@ const events = [
   },
 ];
 
-export default function ProjectEventsPage({ params }: { params: { id: string } }) {
+export default function ProjectEventsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">

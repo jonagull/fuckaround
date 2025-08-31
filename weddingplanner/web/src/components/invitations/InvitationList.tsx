@@ -11,7 +11,7 @@ import {
   type GuestInvitation 
 } from "weddingplanner-shared";
 import { format } from "date-fns";
-import { Mail, Phone, User, UserPlus, Trash2, Send, CheckCircle2 } from "lucide-react";
+import { Mail, Phone, UserPlus, Trash2, Send, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import React, { useState } from "react";
 

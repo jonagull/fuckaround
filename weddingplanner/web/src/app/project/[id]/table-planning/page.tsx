@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { TableProperties, Users, Layout } from "lucide-react";
 
-export default function ProjectTablePlanningPage({ params }: { params: { id: string } }) {
+export default function ProjectTablePlanningPage() {
   return (
     <div className="space-y-6">
       <div>
