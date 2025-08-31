@@ -119,8 +119,15 @@ export const useParseCsvGuests = () => {
 };
 
 export const useBulkCreateInvitations = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: IRequestCreateInvitation[]) => invitationApi.bulkCreateInvitations(data),
+    onSuccess: (_, variables) => {
+      // Invalidate the invitations cache for the event
+      if (variables.length > 0) {
+        queryClient.invalidateQueries({ queryKey: ["invitations", variables[0].eventId] });
+      }
+    },
     onError: (error) => {
       console.error("Error bulk creating invitations:", error);
     },

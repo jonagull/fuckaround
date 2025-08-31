@@ -5,8 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Users, Search, Plus, Mail, Phone, Send } from "lucide-react";
+import { Users, Search, Mail, Phone, Send } from "lucide-react";
 import { CsvImportModal } from "@/components/guests/CsvImportModal";
+import { AddGuestModal } from "@/components/guests/AddGuestModal";
 import { useGetInvitations, useSendGuestInvitations } from "weddingplanner-shared";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -138,10 +139,7 @@ export default function ProjectGuestsPage({ params }: { params: { id: string } }
         </div>
         <div className="flex items-center gap-3">
           <CsvImportModal projectId={params?.id} />
-          <Button className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600">
-            <Plus className="mr-2 h-4 w-4" />
-            Add Guest
-          </Button>
+          <AddGuestModal eventId={params?.id} />
         </div>
       </div>
 
