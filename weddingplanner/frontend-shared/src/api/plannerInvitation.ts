@@ -14,7 +14,7 @@ export const plannerInvitationApi = {
   },
 
   list: async (): Promise<IResponseListPlannerInvitations> => {
-    return await client.get<IResponseListPlannerInvitations>("/invitations/list");
+    return await client.get<IResponseListPlannerInvitations>("/invitations");
   },
 
   accept: async (invitationId: string): Promise<IResponseRespondPlannerInvitation> => {

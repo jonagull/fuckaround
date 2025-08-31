@@ -15,10 +15,11 @@ export const useLogin = () => {
   });
 };
 
-export const useMe = () => useQuery<ResponseUser>({
+export const useMe = () => useQuery<ResponseUser | null>({
   queryKey: ["auth", "user"],
   queryFn: authApi.me,
   retry: false,
+  enabled: true,
 });
 
 export const useLogout = () => {

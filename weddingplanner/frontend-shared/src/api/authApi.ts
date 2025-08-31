@@ -13,7 +13,14 @@ const client = new ApiClient();
 
 export const authApi = {
   // Current user
-  me: async (): Promise<ResponseUser> => await client.get<ResponseUser>("/auth/me"),
+  me: async (): Promise<ResponseUser> => {
+    try {
+      const data = await client.get<ResponseUser>("/auth/me");
+      return data || null;
+    } catch (error) {
+      return null as any;
+    }
+  },
 
   // Web endpoints (httpOnly cookies)
   webRegister: async (data: RequestRegister): Promise<ResponseAuthWeb> =>

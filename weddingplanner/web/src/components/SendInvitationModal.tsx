@@ -75,9 +75,20 @@ export function SendInvitationModal({
   const { currentUser } = useCurrentUser();
   
   // Get current user's role in this event
-  const currentUserRole = event?.planners?.find(
+  const currentUserPlanner = event?.planners?.find(
     p => p.userId === currentUser?.id
-  )?.role || EventRole.GUEST;
+  );
+  
+  // Debug logging
+  useEffect(() => {
+    if (event && currentUser) {
+      console.log("Current user ID:", currentUser.id);
+      console.log("Event planners:", event.planners);
+      console.log("Found planner:", currentUserPlanner);
+    }
+  }, [event, currentUser, currentUserPlanner]);
+  
+  const currentUserRole = currentUserPlanner?.role ?? EventRole.GUEST;
   
   const availableRoles = getAvailableRoles(currentUserRole);
 

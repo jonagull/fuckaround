@@ -11,6 +11,7 @@ import { Calendar, Heart, MapPin, Users, ArrowLeft, Edit, Settings, Users2, Gift
 import Link from "next/link";
 import { SendInvitationModal } from "@/components/SendInvitationModal";
 import { InvitationForm } from "@/components/invitations/InvitationForm";
+import { useCurrentUser } from "@/components/CurrentUserContext";
 // import { InvitationList } from "@/components/invitations/InvitationList"; // TODO: Implement guest invitations
 
 export default function Event() {
@@ -21,6 +22,7 @@ export default function Event() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [showInvitationForm, setShowInvitationForm] = useState(false);
+  const { currentUser } = useCurrentUser();
 
   const handleDeleteEvent = () => {
     deleteEvent(id as string);
@@ -85,6 +87,15 @@ export default function Event() {
       return "Invalid time";
     }
   };
+
+  // Get current user's role in this event
+  const currentUserRole = event?.planners?.find(
+    p => p.userId === currentUser?.id
+  )?.role;
+  
+  const isOwner = currentUserRole === 0; // EventRole.OWNER is 0
+  const isPlanner = currentUserRole === 1; // EventRole.PLANNER is 1
+  const canManageEvent = isOwner || isPlanner;
 
   return (
     <PageWrapper>
@@ -255,6 +266,15 @@ export default function Event() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Your Role</span>
+                  <Badge 
+                    variant={isOwner ? "default" : "secondary"} 
+                    className={`${isOwner ? "bg-rose-500" : isPlanner ? "bg-blue-500" : "bg-gray-500"}`}
+                  >
+                    {isOwner ? "Owner" : isPlanner ? "Planner" : currentUserRole === 2 ? "Vendor" : "Guest"}
+                  </Badge>
+                </div>
+                <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Planning Progress</span>
                   <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
                     Active
@@ -282,14 +302,16 @@ export default function Event() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg">Event Planners</CardTitle>
-                  <Button
-                    size="sm"
-                    onClick={() => setIsInviteModalOpen(true)}
-                    className="bg-rose-500 hover:bg-rose-600"
-                  >
-                    <UserPlus className="h-4 w-4 mr-1" />
-                    Invite
-                  </Button>
+                  {canManageEvent && (
+                    <Button
+                      size="sm"
+                      onClick={() => setIsInviteModalOpen(true)}
+                      className="bg-rose-500 hover:bg-rose-600"
+                    >
+                      <UserPlus className="h-4 w-4 mr-1" />
+                      Invite
+                    </Button>
+                  )}
                 </div>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -329,14 +351,16 @@ export default function Event() {
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                       No planners added yet
                     </p>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => setIsInviteModalOpen(true)}
-                    >
-                      <UserPlus className="h-4 w-4 mr-1" />
-                      Invite your first planner
-                    </Button>
+                    {canManageEvent && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setIsInviteModalOpen(true)}
+                      >
+                        <UserPlus className="h-4 w-4 mr-1" />
+                        Invite your first planner
+                      </Button>
+                    )}
                   </div>
                 )}
               </CardContent>
