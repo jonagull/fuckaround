@@ -53,6 +53,33 @@ public class GuestInvitationController : ControllerBase
         }
     }
 
+    [HttpPost("bulk")]
+    public async Task<ActionResult<List<ResponseGuestInvitation>>> BulkCreateInvitations([FromBody] List<RequestCreateGuestInvitation> requests)
+    {
+        try
+        {
+            var userId = GetUserId();
+            var result = await _guestInvitationService.BulkCreateInvitationsAsync(userId, requests);
+            return Ok(result);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Forbid(ex.Message);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
     [HttpGet("{id}")]
     [AllowAnonymous] // Allow public access to view invitation
     public async Task<ActionResult<ResponseGuestInvitation>> GetInvitation(Guid id)
@@ -267,5 +294,76 @@ public class GuestInvitationController : ControllerBase
 
         result.Add(current.ToString());
         return result.ToArray();
+    }
+
+    [HttpPost("bulk-from-csv")]
+    public async Task<ActionResult<List<ResponseGuestInvitation>>> BulkCreateInvitationsFromCsv([FromForm] Guid eventId, [FromForm] IFormFile csvFile)
+    {
+        try
+        {
+            if (csvFile == null || csvFile.Length == 0)
+            {
+                return BadRequest(new { message = "CSV file is required" });
+            }
+
+            if (!csvFile.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest(new { message = "File must be a CSV file" });
+            }
+
+            var requests = new List<RequestCreateGuestInvitation>();
+
+            using var reader = new StreamReader(csvFile.OpenReadStream(), Encoding.UTF8);
+            var isFirstLine = true;
+
+            while (!reader.EndOfStream)
+            {
+                var line = await reader.ReadLineAsync();
+                if (string.IsNullOrWhiteSpace(line)) continue;
+
+                // Skip header row
+                if (isFirstLine)
+                {
+                    isFirstLine = false;
+                    continue;
+                }
+
+                var columns = ParseCsvLine(line);
+                if (columns.Length >= 5) // Minimum required columns
+                {
+                    var request = new RequestCreateGuestInvitation
+                    {
+                        EventId = eventId,
+                        GuestInfo = new GuestInfo
+                        {
+                            FirstName = columns[0].Trim(),
+                            LastName = columns[1].Trim(),
+                            Email = columns[2].Trim(),
+                            PhoneNumber = columns[3].Trim(),
+                            PhoneCountryCode = columns[4].Trim()
+                        },
+                        AdditionalGuestsCount = columns.Length > 5 && int.TryParse(columns[5].Trim(), out var additional) ? additional : 0
+                    };
+
+                    requests.Add(request);
+                }
+            }
+
+            var userId = GetUserId();
+            var result = await _guestInvitationService.BulkCreateInvitationsAsync(userId, requests);
+            return Ok(result);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Forbid(ex.Message);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = $"Error processing CSV file: {ex.Message}" });
+        }
     }
 }

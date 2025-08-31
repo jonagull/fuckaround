@@ -64,6 +64,95 @@ public class GuestInvitationService : IGuestInvitationService
     return MapToResponse(invitation, eventEntity);
   }
 
+  public async Task<List<ResponseGuestInvitation>> BulkCreateInvitationsAsync(Guid userId, List<RequestCreateGuestInvitation> requests)
+  {
+    if (!requests.Any())
+      throw new ArgumentException("No invitations provided");
+
+    // Get the event ID from the first request (all should be for the same event)
+    var eventId = requests.First().EventId;
+
+    // Validate all requests are for the same event
+    if (requests.Any(r => r.EventId != eventId))
+      throw new ArgumentException("All invitations must be for the same event");
+
+    // Check if user has access to the event
+    var userEvent = await _context.UserEvents
+        .FirstOrDefaultAsync(ue => ue.UserId == userId && ue.EventId == eventId);
+
+    if (userEvent == null)
+      throw new UnauthorizedAccessException("You don't have access to this event");
+
+    // Only OWNER and PLANNER can send invitations
+    if (userEvent.Role != EventRole.OWNER && userEvent.Role != EventRole.PLANNER)
+      throw new UnauthorizedAccessException("Only event owners and planners can send invitations");
+
+    var eventEntity = await _context.Events
+        .FirstOrDefaultAsync(e => e.Id == eventId);
+
+    if (eventEntity == null)
+      throw new KeyNotFoundException("Event not found");
+
+    // Get existing invitations for this event to check for duplicates
+    var existingEmails = await _context.Invitations
+        .Where(i => i.EventId == eventId)
+        .Select(i => i.GuestEmail.ToLower())
+        .ToListAsync();
+
+    var results = new List<ResponseGuestInvitation>();
+    var invitationsToAdd = new List<Invitation>();
+
+    foreach (var request in requests)
+    {
+      try
+      {
+        // Check if invitation already exists for this email
+        if (existingEmails.Contains(request.GuestInfo.Email.ToLower()))
+        {
+          // Skip duplicates - don't add to results, just continue
+          continue;
+        }
+
+        var invitation = new Invitation
+        {
+          EventId = request.EventId,
+          GuestFirstName = request.GuestInfo.FirstName,
+          GuestLastName = request.GuestInfo.LastName,
+          GuestEmail = request.GuestInfo.Email,
+          GuestPhoneNumber = request.GuestInfo.PhoneNumber,
+          GuestPhoneCountryCode = request.GuestInfo.PhoneCountryCode,
+          AdditionalGuestsCount = request.AdditionalGuestsCount,
+          AdditionalGuests = "[]", // Empty JSON array
+          InvitedAt = DateTime.UtcNow
+        };
+
+        invitationsToAdd.Add(invitation);
+        // Add to existing emails to prevent duplicates within the same bulk request
+        existingEmails.Add(request.GuestInfo.Email.ToLower());
+      }
+      catch (Exception)
+      {
+        // Skip invalid requests - just continue to next one
+        continue;
+      }
+    }
+
+    // Add all valid invitations to the database in one go
+    if (invitationsToAdd.Any())
+    {
+      _context.Invitations.AddRange(invitationsToAdd);
+      await _context.SaveChangesAsync();
+
+      // Map all successfully created invitations to response objects
+      foreach (var invitation in invitationsToAdd)
+      {
+        results.Add(MapToResponse(invitation, eventEntity));
+      }
+    }
+
+    return results;
+  }
+
   public async Task<List<ResponseGuestInvitation>> GetEventInvitationsAsync(Guid eventId, Guid userId)
   {
     // Check if user has access to the event

@@ -117,3 +117,12 @@ export const useParseCsvGuests = () => {
     },
   });
 };
+
+export const useBulkCreateInvitations = () => {
+  return useMutation({
+    mutationFn: (data: IRequestCreateInvitation[]) => invitationApi.bulkCreateInvitations(data),
+    onError: (error) => {
+      console.error("Error bulk creating invitations:", error);
+    },
+  });
+};

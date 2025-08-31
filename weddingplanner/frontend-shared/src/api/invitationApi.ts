@@ -72,6 +72,15 @@ export const invitationApi = {
     return await client.get<GuestInvitation[]>(`/guest-invitations/event/${eventId}`);
   },
 
+  bulkCreateInvitations: async (
+    data: IRequestCreateInvitation[]
+  ): Promise<IResponseCreateInvitation[]> => {
+    return await client.post<IResponseCreateInvitation[], IRequestCreateInvitation[]>(
+      "/guest-invitations/bulk",
+      data
+    );
+  },
+
   updateInvitation: async (
     invitationId: string,
     data: IRequestUpdateInvitation

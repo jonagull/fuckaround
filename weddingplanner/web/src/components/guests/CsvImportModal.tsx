@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Upload, FileText, AlertCircle, CheckCircle, Download } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
-import { useParseCsvGuests } from "weddingplanner-shared";
+import { useBulkCreateInvitations, useParseCsvGuests } from "weddingplanner-shared";
 
 interface CsvImportModalProps {
   projectId: string;
@@ -38,8 +38,10 @@ export function CsvImportModal({ projectId, onImportComplete }: CsvImportModalPr
   const [isParsing, setIsParsing] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editingGuest, setEditingGuest] = useState<CsvGuest | null>(null);
+  const [isSendingInvitations, setIsSendingInvitations] = useState(false);
 
   const parseCsvGuests = useParseCsvGuests();
+  const bulkCreateInvitations = useBulkCreateInvitations();
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -100,6 +102,48 @@ export function CsvImportModal({ projectId, onImportComplete }: CsvImportModalPr
   const handleDeleteGuest = (index: number) => {
     const updatedGuests = parsedGuests.filter((_, i) => i !== index);
     setParsedGuests(updatedGuests);
+  };
+
+  const handleBulkSendInvitations = async () => {
+    if (parsedGuests.length === 0) return;
+
+    setIsSendingInvitations(true);
+    setError(null);
+
+    try {
+      // Convert CsvGuest to IRequestCreateInvitation format
+      const invitations = parsedGuests.map((guest) => ({
+        eventId: projectId,
+        guestInfo: {
+          firstName: guest.firstName,
+          lastName: guest.lastName,
+          email: guest.email,
+          phoneNumber: guest.phoneNumber,
+          phoneCountryCode: guest.phoneCountryCode,
+        },
+        additionalGuestsCount: guest.additionalGuestsCount,
+      }));
+
+      const result = await bulkCreateInvitations.mutateAsync(invitations);
+      console.log("Bulk invitations created:", result);
+
+      // Show success message
+      setSuccess(true);
+      setError(null);
+
+      // Call the completion callback if provided
+      onImportComplete?.();
+
+      // Close modal after a short delay
+      setTimeout(() => {
+        setIsOpen(false);
+        resetForm();
+      }, 2000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to send invitations");
+    } finally {
+      setIsSendingInvitations(false);
+    }
   };
 
   const resetForm = () => {
@@ -421,13 +465,18 @@ David,Brown,david.brown@email.com,3335557777,+1,1`;
                   <div className="flex gap-3">
                     <Button
                       variant="outline"
-                      onClick={() => {
-                        // TODO: Implement bulk invitation sending
-                        console.log("Sending invitations to:", parsedGuests);
-                      }}
+                      onClick={handleBulkSendInvitations}
+                      disabled={isSendingInvitations}
                       className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white border-0 px-6"
                     >
-                      Send Invitations to All
+                      {isSendingInvitations ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          Sending Invitations...
+                        </>
+                      ) : (
+                        `Send Invitations to All (${parsedGuests.length})`
+                      )}
                     </Button>
                     <Button
                       variant="outline"
