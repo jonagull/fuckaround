@@ -30,7 +30,7 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "prisma": "^6.15.0",
-    "weddingplanner-types": "1.0.20-address.5"
+    "weddingplanner-types": "1.0.20"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
