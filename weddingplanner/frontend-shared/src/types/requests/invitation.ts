@@ -51,3 +51,16 @@ export interface IResponseGetInvitations {
 export interface IResponseGetInvitation {
   invitation: ResponseInvitation;
 }
+
+export interface IRequestParseCsvGuests {
+  csvFile: File;
+}
+
+export interface IResponseCsvGuestInfo {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  phoneCountryCode: string;
+  additionalGuestsCount: number;
+}
