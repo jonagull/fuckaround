@@ -5,8 +5,9 @@
   "private": true,
   "scripts": {
     "types": "cd frontend-shared && pnpm build",
+    "watch": "cd frontend-shared && pnpm watch",
     "build": "pnpm -r build",
-    "dev": "pnpm -r dev",
+    "dev": "concurrently \"cd frontend-shared && pnpm watch\" \"cd web && pnpm dev\"",
     "clean": "pnpm -r clean",
     "install:all": "pnpm install"
   },
@@ -14,5 +15,8 @@
   "engines": {
     "node": ">=18.0.0",
     "pnpm": ">=8.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }

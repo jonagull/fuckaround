@@ -1,16 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
+import { PUBLIC_ROUTES } from "weddingplanner-shared";
 
-const publicRoutes = ["/dashboard", "/register", "/forgot-password", "/reset-password"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith("/api")) return NextResponse.next();
 
-  // TODO
-  // if (pathname.startsWith("/protected")) return checkAuth(request);
-  if (!publicRoutes.includes(pathname)) return checkAuth(request);
+  if (!PUBLIC_ROUTES.includes(pathname)) return checkAuth(request);
 
   return NextResponse.next();
 }

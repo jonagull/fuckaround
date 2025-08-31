@@ -165,8 +165,8 @@ public class InvitationService : IInvitationService
 
     return new ResponseListPlannerInvitations
     {
-        Sent = sentInvitations.Select(MapToResponseInvitationWithRelations).ToList(),
-        Received = receivedInvitations.Select(MapToResponseInvitationWithRelations).ToList()
+      Sent = sentInvitations.Select(MapToResponseInvitationWithRelations).ToList(),
+      Received = receivedInvitations.Select(MapToResponseInvitationWithRelations).ToList()
     };
   }
 

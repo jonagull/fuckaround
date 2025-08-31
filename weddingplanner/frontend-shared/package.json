@@ -11,11 +11,12 @@
     "preinstall": "npx only-allow pnpm",
     "build": "tsc",
     "dev": "tsc --watch",
+    "watch": "nodemon",
     "clean": "rm -rf dist",
     "pub": "pnpm version patch --no-git-tag-version && pnpm run build && pnpm publish --no-git-checks"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.85.5",
+    "@tanstack/react-query": "^5.85.6",
     "@tanstack/react-query-devtools": "^5.85.6",
     "axios": "^1.11.0"
   },
@@ -26,6 +27,7 @@
   "devDependencies": {
     "@types/node": "^24.3.0",
     "@types/react": "^18.3.24",
+    "nodemon": "^3.1.10",
     "typescript": "^5.9.2"
   },
   "engines": {
