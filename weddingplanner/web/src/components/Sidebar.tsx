@@ -11,6 +11,7 @@ import {
   Heart,
   TableProperties,
   ArrowLeft,
+  Bell,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -90,6 +91,12 @@ export function Sidebar({ className }: SidebarProps) {
               <Button variant="outline" className="w-full justify-start">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 All Projects
+              </Button>
+            </Link>
+            <Link href="/protected/invitations">
+              <Button variant="outline" className="w-full justify-start">
+                <Bell className="mr-2 h-4 w-4" />
+                Invitations
               </Button>
             </Link>
           </div>

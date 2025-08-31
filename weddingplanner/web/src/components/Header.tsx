@@ -4,14 +4,17 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { Skeleton } from "./ui/skeleton";
-import { useMe, useLogout } from "weddingplanner-shared";
+import { useMe, useLogout, usePlannerInvitations } from "weddingplanner-shared";
 import { useCurrentUser } from "./CurrentUserContext";
+import { Bell } from "lucide-react";
+import { Badge } from "./ui/badge";
 
 export const Header = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const { mutate: logout } = useLogout();
   const { data: me } = useMe();
   const { setCurrentUser } = useCurrentUser();
+  const { data: invitations } = usePlannerInvitations();
 
   const router = useRouter();
   const pathname = usePathname();
@@ -48,6 +51,8 @@ export const Header = () => {
     else router.push("/login");
   };
 
+  const pendingInvitationCount = invitations?.received?.length || 0;
+
   if (isAuthenticated === null) {
     return (
       <nav className="flex items-center justify-between p-6 max-w-7xl mx-auto">
@@ -77,6 +82,16 @@ export const Header = () => {
         </div>
       </Link>
       <div className="flex items-center space-x-4">
+        {isAuthenticated && (
+          <Link href="/protected/invitations" className="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
+            <Bell className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+            {pendingInvitationCount > 0 && (
+              <span className="absolute -top-1 -right-1 h-5 w-5 bg-rose-500 text-white text-xs rounded-full flex items-center justify-center">
+                {pendingInvitationCount}
+              </span>
+            )}
+          </Link>
+        )}
         <button
           onClick={handleLogoutClick}
           className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-2 rounded-full hover:from-rose-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl"

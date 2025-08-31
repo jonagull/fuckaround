@@ -7,8 +7,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Calendar, Heart, MapPin, Users, ArrowLeft, Edit, Settings, Users2, Gift, UtensilsCrossed, Phone, Mail, Globe, Clock, Trash } from "lucide-react";
+import { Calendar, Heart, MapPin, Users, ArrowLeft, Edit, Settings, Users2, Gift, UtensilsCrossed, Phone, Mail, Globe, Clock, Trash, UserPlus, Send } from "lucide-react";
 import Link from "next/link";
+import { SendInvitationModal } from "@/components/SendInvitationModal";
+import { InvitationForm } from "@/components/invitations/InvitationForm";
+import { InvitationList } from "@/components/invitations/InvitationList";
 
 export default function Event() {
   const { id } = useParams();
@@ -16,6 +19,8 @@ export default function Event() {
   const { data: event, isLoading, error } = useGetEvent(id as string);
   const { mutate: deleteEvent } = useDeleteEvent();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const [showInvitationForm, setShowInvitationForm] = useState(false);
 
   const handleDeleteEvent = () => {
     deleteEvent(id as string);
@@ -272,6 +277,72 @@ export default function Event() {
               </CardContent>
             </Card>
 
+            {/* Event Planners */}
+            <Card className="border-0 shadow-lg">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-lg">Event Planners</CardTitle>
+                  <Button 
+                    size="sm" 
+                    onClick={() => setIsInviteModalOpen(true)}
+                    className="bg-rose-500 hover:bg-rose-600"
+                  >
+                    <UserPlus className="h-4 w-4 mr-1" />
+                    Invite
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {event.planners && event.planners.length > 0 ? (
+                  event.planners.map((planner) => (
+                    <div key={planner.id} className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-rose-100 dark:bg-rose-900 rounded-full flex items-center justify-center">
+                          <Users className="h-4 w-4 text-rose-600 dark:text-rose-400" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-gray-900 dark:text-white">
+                            {planner.user?.name || "Unknown"}
+                          </p>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">
+                            {planner.role === "OWNER" ? "Owner" :
+                             planner.role === "PLANNER" ? "Planner" :
+                             planner.role === "VENDOR" ? "Vendor" : "Guest"}
+                          </p>
+                        </div>
+                      </div>
+                      <Badge 
+                        variant={planner.role === "OWNER" ? "default" : "outline"} 
+                        className={`text-xs ${
+                          planner.role === "OWNER" ? "bg-rose-500" :
+                          planner.role === "PLANNER" ? "bg-blue-500" :
+                          planner.role === "VENDOR" ? "bg-green-500" : "bg-gray-500"
+                        }`}
+                      >
+                        {planner.role === "OWNER" ? "Owner" :
+                         planner.role === "PLANNER" ? "Planner" :
+                         planner.role === "VENDOR" ? "Vendor" : "Guest"}
+                      </Badge>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-4">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                      No planners added yet
+                    </p>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => setIsInviteModalOpen(true)}
+                    >
+                      <UserPlus className="h-4 w-4 mr-1" />
+                      Invite your first planner
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
             {/* Contact Information */}
             <Card className="border-0 shadow-lg">
               <CardHeader>
@@ -352,7 +423,51 @@ export default function Event() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Guest Invitations Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Guest Invitations</h2>
+              {!showInvitationForm && (
+                <Button
+                  onClick={() => setShowInvitationForm(true)}
+                  className="bg-rose-500 hover:bg-rose-600"
+                >
+                  <Send className="mr-2 h-4 w-4" />
+                  Send Invitation
+                </Button>
+              )}
+            </div>
+            {showInvitationForm ? (
+              <InvitationForm
+                eventId={id as string}
+                onSuccess={() => setShowInvitationForm(false)}
+              />
+            ) : (
+              <InvitationList eventId={id as string} />
+            )}
+          </div>
+          
+          <div>
+            {showInvitationForm && (
+              <div className="mt-11">
+                <InvitationList eventId={id as string} />
+              </div>
+            )}
+          </div>
+        </div>
       </div>
+
+      {/* Send Invitation Modal */}
+      {event && (
+        <SendInvitationModal
+          eventId={event.id}
+          eventName={event.eventName}
+          open={isInviteModalOpen}
+          onOpenChange={setIsInviteModalOpen}
+        />
+      )}
     </PageWrapper>
   );
 }

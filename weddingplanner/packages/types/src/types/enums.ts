@@ -6,9 +6,10 @@ export enum EventRole {
 }
 
 export enum InvitationStatus {
-  Pending = "PENDING",
-  Accepted = "ACCEPTED",
-  Rejected = "REJECTED",
+  PENDING = "PENDING",
+  ACCEPTED = "ACCEPTED",
+  REJECTED = "REJECTED",
+  EXPIRED = "EXPIRED",
 }
 
 export enum EventType {

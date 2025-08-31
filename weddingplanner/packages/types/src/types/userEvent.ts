@@ -8,6 +8,9 @@ export interface UserEvent extends BaseEntity {
   eventId: Event["id"];
   userId: User["id"];
   role: EventRole;
-
   stringRole: StringRole;
+}
+
+export interface UserEventWithUser extends UserEvent {
+  user: Pick<User, 'id' | 'name' | 'email'>;
 }
