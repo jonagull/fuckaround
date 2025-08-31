@@ -33,7 +33,7 @@ const getNavigation = (projectId?: string) => [
   },
   {
     name: "Events & Timeline",
-    href: projectId ? `/event/${projectId}/events` : "#",
+    href: projectId ? `/event/${projectId}/timeline` : "#",
     icon: Calendar,
   },
   {
