@@ -1,15 +1,9 @@
 "use strict";
-var __importDefault =
-  (this && this.__importDefault) ||
-  function (mod) {
-    return mod && mod.__esModule ? mod : { default: mod };
-  };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyRefreshToken =
-  exports.verifyAccessToken =
-  exports.generateRefreshToken =
-  exports.generateAccessToken =
-    void 0;
+exports.verifyRefreshToken = exports.verifyAccessToken = exports.generateRefreshToken = exports.generateAccessToken = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || "your-refresh-secret-key";
@@ -22,8 +16,7 @@ const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || "your-refresh-secre
  * const accessToken = generateAccessToken('user123');
  * ```
  */
-const generateAccessToken = (userId) =>
-  jsonwebtoken_1.default.sign({ userId }, JWT_SECRET, { expiresIn: "15m" });
+const generateAccessToken = (userId) => jsonwebtoken_1.default.sign({ userId }, JWT_SECRET, { expiresIn: "15m" });
 exports.generateAccessToken = generateAccessToken;
 /**
  * Generates a long-lived refresh token for obtaining new access tokens
@@ -34,8 +27,7 @@ exports.generateAccessToken = generateAccessToken;
  * const refreshToken = generateRefreshToken('user123');
  * ```
  */
-const generateRefreshToken = (userId) =>
-  jsonwebtoken_1.default.sign({ userId }, JWT_REFRESH_SECRET, { expiresIn: "7d" });
+const generateRefreshToken = (userId) => jsonwebtoken_1.default.sign({ userId }, JWT_REFRESH_SECRET, { expiresIn: "7d" });
 exports.generateRefreshToken = generateRefreshToken;
 /**
  * Verifies and decodes an access token

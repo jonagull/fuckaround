@@ -1,4 +1,4 @@
-import { EmptyBody, GetUserParams, User } from "weddingplanner-types";
+import { EmptyBody, GetUserParams, User, UserEvent } from "weddingplanner-types";
 import { prisma } from "../../lib/prisma";
 import { asyncHandler, TypedRequest } from "../../lib/types";
 import { notFound, forbidden } from "../../lib/ApiError";
@@ -22,6 +22,13 @@ export const getUserFunction = asyncHandler<EmptyBody, User, GetUserParams>(
       phone: true,
       createdAt: true,
       updatedAt: true,
+      userEvents: {
+        include: {
+          event: true,
+          role: true,
+          stringRole: true,
+        },
+      },
     };
 
     const user =
@@ -34,6 +41,7 @@ export const getUserFunction = asyncHandler<EmptyBody, User, GetUserParams>(
       phoneNumber: user.phone || "",
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
-    };
+      userEvents: user.userEvents as UserEvent[],
+    }
   }
 );

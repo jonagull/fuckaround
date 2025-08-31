@@ -4,7 +4,7 @@ import cors from "cors";
 import usersRoutes from "./routes/users";
 import authRoutes from "./routes/auth";
 import { errorHandler } from "./middleware/errorHandler";
-
+import eventRoutes from "./routes/event";
 const app = express();
 const PORT = 3070;
 
@@ -22,6 +22,7 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoutes); // auth routes
 app.use("/api/users", usersRoutes); // users route
+app.use("/api/events", eventRoutes); // event routes
 
 // app.use(/api/invitations', invitationRoites) // invitation rotues.
 

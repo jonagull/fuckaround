@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { authApi } from "../api/authApi";
-import { LoginRequest } from "weddingplanner-types";
+import { type LoginRequest } from "weddingplanner-types";
 
 export const useLogin = () => {
   const queryClient = useQueryClient();
@@ -14,12 +14,10 @@ export const useLogin = () => {
   });
 };
 
-export const useMe = () => {
-  return useQuery({
-    queryKey: ["auth", "user"],
-    queryFn: authApi.me,
-  });
-};
+export const useMe = () => useQuery({
+  queryKey: ["auth", "user"],
+  queryFn: authApi.me,
+});
 
 export const useLogout = () => {
   const queryClient = useQueryClient();

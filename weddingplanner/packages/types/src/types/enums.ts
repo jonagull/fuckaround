@@ -1,18 +1,19 @@
 export enum EventRole {
-  Owner,
-  Admin,
-  Editor,
-  Reader,
+  OWNER = "OWNER",
+  PLANNER = "PLANNER",
+  VENDOR = "VENDOR",
+  GUEST = "GUEST",
 }
 
 export enum InvitationStatus {
-  Pending,
-  Accepted,
-  Rejected,
+  Pending = "PENDING",
+  Accepted = "ACCEPTED",
+  Rejected = "REJECTED",
 }
 
 export enum EventType {
-  Wedding,
-  Birthday,
-  Other,
+  WEDDING = "WEDDING",
+  BIRTHDAY = "BIRTHDAY",
+  CORPORATE = "CORPORATE",
+  OTHER = "OTHER",
 }

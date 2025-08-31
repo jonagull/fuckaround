@@ -1,5 +1,5 @@
-import { ApiResponse } from "weddingplanner-types";
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosError } from "axios";
+import { type ApiResponse } from "weddingplanner-types";
+import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosError } from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3070/api";
 
@@ -48,36 +48,18 @@ class ApiClient {
         };
 
         // If error is not 401 or request has already been retried, reject
-        if (error.response?.status !== 401 || originalRequest._retry) {
-          return Promise.reject(error);
-        }
+        if (error.response?.status !== 401 || originalRequest._retry) return Promise.reject(error);
 
-        // On any 401, immediately clear the auth cache
-        if (typeof window !== "undefined") {
-          const queryClient = (window as any).__REACT_QUERY_CLIENT__;
-          if (queryClient) {
-            queryClient.removeQueries({
-              queryKey: ["auth", "user"],
-            });
-          }
-        }
 
         // Don't retry auth endpoints
-        if (originalRequest.url?.includes("/auth/")) {
-          return Promise.reject(error);
-        }
+        if (originalRequest.url?.includes("/auth/")) return Promise.reject(error);
+
 
         if (this.isRefreshing) {
           // If we're already refreshing, queue this request
           return new Promise((resolve, reject) => {
             this.failedQueue.push({ resolve, reject });
-          })
-            .then(() => {
-              return this.client(originalRequest);
-            })
-            .catch((err) => {
-              return Promise.reject(err);
-            });
+          }).then(() => this.client(originalRequest)).catch((err) => Promise.reject(err));
         }
 
         originalRequest._retry = true;
@@ -96,16 +78,6 @@ class ApiClient {
           // Refresh failed, process queue with error
           this.processQueue(refreshError as Error);
 
-          // Clear auth state and redirect to login
-          if (typeof window !== "undefined") {
-            const queryClient = (window as any).__REACT_QUERY_CLIENT__;
-            if (queryClient) {
-              queryClient.clear();
-            }
-
-            window.location.href = "/login";
-          }
-
           return Promise.reject(refreshError);
         } finally {
           this.isRefreshing = false;
@@ -115,13 +87,7 @@ class ApiClient {
   }
 
   private async refreshToken(): Promise<void> {
-    try {
-      // Call the refresh endpoint
-      // This will automatically use the refresh-token cookie
-      await this.client.post("/auth/refresh-web");
-    } catch (error) {
-      throw error;
-    }
+    await this.client.post("/auth/refresh-web");
   }
 
   async get<T = any>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {

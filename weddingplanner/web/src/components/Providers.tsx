@@ -4,6 +4,7 @@ import React from "react";
 import { QueryClient, QueryClientProvider, ReactQueryDevtools } from "weddingplanner-shared";
 import { useState } from "react";
 import { CurrentUserProvider } from "./CurrentUserContext";
+import { Toaster } from "sonner";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -22,6 +23,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <Toaster />
       <CurrentUserProvider>{children}</CurrentUserProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

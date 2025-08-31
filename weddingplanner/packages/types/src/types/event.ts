@@ -1,14 +1,14 @@
-import { BaseEntity } from "./baseEntity";
-import { Address } from "./common";
-import { UserEvent } from "./userEvent";
-import { EventType } from "./enums";
+import type { BaseEntity } from "./baseEntity";
+import type { Address, Nullable } from "./common";
+import type { UserEvent } from "./userEvent";
+import type { EventType } from "./enums";
 
 export interface Event extends BaseEntity {
   eventName: string;
-  eventDescription: string;
+  eventDescription: Nullable<string>;
   eventType: EventType;
 
   planners: UserEvent[];
-  eventDate: Date;
-  venueAddress: Address;
+  eventDate: Nullable<Date>;
+  venueAddress: Nullable<Address>;
 }

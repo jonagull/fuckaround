@@ -10,5 +10,4 @@ export interface UserEvent extends BaseEntity {
   role: EventRole;
 
   stringRole: StringRole;
-  blbl: string;
 }
